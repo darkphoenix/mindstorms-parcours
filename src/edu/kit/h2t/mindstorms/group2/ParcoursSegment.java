@@ -19,9 +19,9 @@ public enum ParcoursSegment {
 			color = new EV3ColorSensor(colorPort);
 			sensorMover = new EV3MediumRegulatedMotor(MotorPort.D);
 			redMode = color.getRedMode();
-			ParcoursMain.leftMotor.setSpeed(70);
-			ParcoursMain.rightMotor.setSpeed(70);
-			sensorMover.setSpeed(1000);
+			ParcoursMain.leftMotor.setSpeed(250);
+			ParcoursMain.rightMotor.setSpeed(250);
+			sensorMover.setSpeed(3600);
 		}
 		public void doStep() {
 			float[] leftSample = new float[1];
@@ -46,8 +46,8 @@ public enum ParcoursSegment {
 				float res[] = new float[1];
 				do {
 					redMode.fetchSample(res, 0);
-					ParcoursMain.rightMotor.rotate(160, false);
-				} while (res[0] > 0.5);
+					ParcoursMain.rightMotor.rotate(450, false);
+				} while (res[0] > 0.4);
 				//ParcoursMain.leftMotor.rotate(-120, false);
 			}
 			
@@ -59,9 +59,9 @@ public enum ParcoursSegment {
 				float res[] = new float[1];
 				do {
 					redMode.fetchSample(res, 0);
-					ParcoursMain.leftMotor.rotate(60, true);
-					ParcoursMain.rightMotor.rotate(-160, false);
-				} while (res[0] > 0.5);
+					ParcoursMain.leftMotor.rotate(100, true);
+					ParcoursMain.rightMotor.rotate(-750, false);
+				} while (res[0] > 0.4);
 				sensorMover.rotateTo(0, false);
 			}
 			else {
