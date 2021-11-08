@@ -24,50 +24,57 @@ public enum ParcoursSegment {
 			sensorMover.setSpeed(3600);
 		}
 		public void doStep() {
+			//Drive on line
+			float res[] = new float[1];
+			ParcoursMain.leftMotor.synchronizeWith(new RegulatedMotor[]{ParcoursMain.rightMotor});
+			do {
+				redMode.fetchSample(res, 0);
+				ParcoursMain.leftMotor.forward();
+				ParcoursMain.rightMotor.forward();
+			} while (res[0] > 0.4);
+			ParcoursMain.leftMotor.stop();
+			ParcoursMain.rightMotor.stop();
+			
+			//Lost line, let's find it
 			float[] leftSample = new float[1];
 			float[] rightSample = new float[1];
 			
-			sensorMover.rotateTo(-120, false);
+			sensorMover.rotateTo(-60, false);
 			redMode.fetchSample(leftSample, 0);
 			
-			sensorMover.rotateTo(0, false);
+			sensorMover.rotateTo(60, false);
 			redMode.fetchSample(rightSample, 0);
 			
-			float leftVal = leftSample[0];
-			float rightVal = rightSample[0];
-			float diff = leftVal - rightVal;
+			float diff = leftSample[0] - rightSample[0];
 			
-			ParcoursMain.lcd.drawString(Float.toString(diff), 0, 5);
+			sensorMover.rotateTo(0, false);
 			
-			//links negativ
+			//line is left
 			if (diff < -0.1) {
 				ParcoursMain.leftMotor.stop();
 				ParcoursMain.rightMotor.stop();
-				float res[] = new float[1];
+				sensorMover.rotateTo(60, false);
 				do {
 					redMode.fetchSample(res, 0);
-					ParcoursMain.rightMotor.rotate(450, false);
-				} while (res[0] > 0.4);
+					ParcoursMain.rightMotor.rotate(100, false);
+				} while (res[0] < 0.2);
 				//ParcoursMain.leftMotor.rotate(-120, false);
+				sensorMover.rotateTo(0, false);
 			}
 			
-			//recht positiv
+			//line is right
 			else if (diff > 0.1) {
 				ParcoursMain.leftMotor.stop();
 				ParcoursMain.rightMotor.stop();
-				sensorMover.rotateTo(-120, false);
-				float res[] = new float[1];
+				sensorMover.rotateTo(-60, false);
 				do {
 					redMode.fetchSample(res, 0);
-					ParcoursMain.leftMotor.rotate(100, true);
-					ParcoursMain.rightMotor.rotate(-750, false);
-				} while (res[0] > 0.4);
+					ParcoursMain.leftMotor.rotate(30, true);
+					ParcoursMain.rightMotor.rotate(-100, false);
+				} while (res[0] < 0.2);
 				sensorMover.rotateTo(0, false);
 			}
-			else {
-				ParcoursMain.leftMotor.forward();
-				ParcoursMain.rightMotor.forward();
-			}
+			//ParcoursMain.moveTo(null);
 		}
 	},
 	COUNT("Count") {
