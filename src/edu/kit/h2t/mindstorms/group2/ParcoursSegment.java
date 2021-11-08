@@ -19,6 +19,9 @@ public enum ParcoursSegment {
 			color = new EV3ColorSensor(colorPort);
 			sensorMover = new EV3MediumRegulatedMotor(MotorPort.D);
 			redMode = color.getRedMode();
+			ParcoursMain.leftMotor.setSpeed(70);
+			ParcoursMain.rightMotor.setSpeed(70);
+			sensorMover.setSpeed(1000);
 		}
 		public void doStep() {
 			float[] leftSample = new float[1];
@@ -37,16 +40,33 @@ public enum ParcoursSegment {
 			ParcoursMain.lcd.drawString(Float.toString(diff), 0, 5);
 			
 			//links negativ
-			if (diff < -0.2) {
-				ParcoursMain.lcd.drawString("links", 5, 6);	
+			if (diff < -0.1) {
+				ParcoursMain.leftMotor.stop();
+				ParcoursMain.rightMotor.stop();
+				float res[] = new float[1];
+				do {
+					redMode.fetchSample(res, 0);
+					ParcoursMain.rightMotor.rotate(160, false);
+				} while (res[0] > 0.5);
+				//ParcoursMain.leftMotor.rotate(-120, false);
 			}
 			
 			//recht positiv
-			else if (diff > 0.2) {
-				ParcoursMain.lcd.drawString("rechts", 5, 6);
+			else if (diff > 0.1) {
+				ParcoursMain.leftMotor.stop();
+				ParcoursMain.rightMotor.stop();
+				sensorMover.rotateTo(-120, false);
+				float res[] = new float[1];
+				do {
+					redMode.fetchSample(res, 0);
+					ParcoursMain.leftMotor.rotate(60, true);
+					ParcoursMain.rightMotor.rotate(-160, false);
+				} while (res[0] > 0.5);
+				sensorMover.rotateTo(0, false);
 			}
 			else {
-				ParcoursMain.lcd.drawString("nichts", 5, 6);
+				ParcoursMain.leftMotor.forward();
+				ParcoursMain.rightMotor.forward();
 			}
 		}
 	},

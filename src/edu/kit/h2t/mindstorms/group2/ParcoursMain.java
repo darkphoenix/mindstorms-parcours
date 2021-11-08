@@ -5,15 +5,23 @@ import lejos.hardware.BrickFinder;
 import lejos.hardware.Button;
 import lejos.hardware.ev3.EV3;
 import lejos.hardware.lcd.TextLCD;
+import lejos.hardware.motor.EV3LargeRegulatedMotor;
+import lejos.hardware.port.MotorPort;
+import lejos.robotics.RegulatedMotor;
 
 public class ParcoursMain {
 	private static ParcoursSegment seg;
 	public static EV3 brick;
 	public static TextLCD lcd;
+	public static RegulatedMotor leftMotor;
+	public static RegulatedMotor rightMotor;
 	
 	public static void main(String[] args) {
 		brick = (EV3) BrickFinder.getLocal();
 		lcd = brick.getTextLCD();
+		
+		leftMotor = new EV3LargeRegulatedMotor(MotorPort.B);
+		rightMotor = new EV3LargeRegulatedMotor(MotorPort.A);
 		
 		String names[] = new String[ParcoursSegment.values().length];
 		for(ParcoursSegment s : ParcoursSegment.values()) {
