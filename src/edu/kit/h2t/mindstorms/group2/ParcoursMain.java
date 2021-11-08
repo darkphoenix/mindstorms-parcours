@@ -8,7 +8,7 @@ import lejos.hardware.lcd.TextLCD;
 
 public class ParcoursMain {
 	private static ParcoursSegment seg;
-	private static EV3 brick;
+	public static EV3 brick;
 	public static TextLCD lcd;
 	
 	public static void main(String[] args) {
