@@ -9,7 +9,7 @@ import lejos.hardware.lcd.TextLCD;
 public class ParcoursMain {
 	private static ParcoursSegment seg;
 	private static EV3 brick;
-	private static TextLCD lcd;
+	public static TextLCD lcd;
 	
 	public static void main(String[] args) {
 		brick = (EV3) BrickFinder.getLocal();
@@ -20,11 +20,11 @@ public class ParcoursMain {
 			names[s.ordinal()] = s.name;
 		}
 		
-		while(!Button.ENTER.isDown()) {
+		while(!Button.ESCAPE.isDown()) {
 			TextMenu segmentMenu = new TextMenu(names, 1, "Segment");
 			int segNum = segmentMenu.select();
 			moveTo(ParcoursSegment.values()[segNum]);
-			while(!Button.ENTER.isDown())
+			while(!Button.ESCAPE.isDown())
 				seg.doStep();
 		}
 	}

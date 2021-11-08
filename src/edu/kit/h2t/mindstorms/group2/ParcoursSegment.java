@@ -1,5 +1,7 @@
 package edu.kit.h2t.mindstorms.group2;
 
+import lejos.utility.Delay;
+
 public enum ParcoursSegment {
 	LINEFOLLOW("Follow line") {
 		private int cnt;
@@ -8,13 +10,20 @@ public enum ParcoursSegment {
 		}
 		public void doStep() {
 			cnt++;
+			Delay.msDelay(1000);
+			ParcoursMain.lcd.drawString(Integer.toString(cnt), 4, 3);
 			if(cnt>10)
 				ParcoursMain.moveTo(LOOP);
 		}
 	},
 	LOOP("Loop forever") {
-		public void init() {}
-		public void doStep() {}
+		private int cnt;
+		public void init() { cnt = 0; }
+		public void doStep() {
+			cnt++;
+			Delay.msDelay(1000);
+			ParcoursMain.lcd.drawString(Integer.toString(cnt), 4, 3);
+		}
 	};
 
 	public String name;
