@@ -98,6 +98,30 @@ public enum ParcoursSegment {
 			Delay.msDelay(1000);
 			ParcoursMain.lcd.drawString(Integer.toString(cnt), 4, 3);
 		}
+	},
+	LINEFOLLOW_REGULATED("Follow line using regulator"){
+		private Port colorPort;
+		private EV3ColorSensor color;
+		private RegulatedMotor sensorMover;
+		private SensorMode redMode;
+		private final double p = 1;
+		private final double offset = 0.5;
+		public void init() {
+			colorPort = ParcoursMain.brick.getPort("S1");
+			color = new EV3ColorSensor(colorPort);
+			redMode = color.getRedMode();
+			ParcoursMain.leftMotor.setSpeed(250);
+			ParcoursMain.rightMotor.setSpeed(250);
+			ParcoursMain.leftMotor.forward();
+			ParcoursMain.rightMotor.forward();
+		}
+		public void doStep() {
+			float[] sample = new float[1];
+			redMode.fetchSample(sample, 0);
+			int y = (int) ((sample[0] - offset) * p);
+			ParcoursMain.leftMotor.setSpeed(360 + y);
+			ParcoursMain.rightMotor.setSpeed(360 - y);
+		}
 	};
 
 	public String name;
