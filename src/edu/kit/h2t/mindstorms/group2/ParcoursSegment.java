@@ -35,7 +35,7 @@ public enum ParcoursSegment {
 //			ParcoursMain.leftMotor.synchronizeWith(new RegulatedMotor[]{ParcoursMain.rightMotor});
 //			ParcoursMain.rightMotor.synchronizeWith(new RegulatedMotor[]{ParcoursMain.leftMotor});
 			
-			while (getRedValue() > 0.2) {
+			while (getRedValue() > 0.1) {
 				int y = (int) ((getRedValue() - offset) * p);
 				LCD.drawInt(y, 4, 6);
 				
@@ -48,6 +48,8 @@ public enum ParcoursSegment {
 				LCD.drawString("DO  " + Float.toString(res[0]).substring(0, 3), 4, 6);
 			}
 			
+			ParcoursMain.leftMotor.setSpeed(360);
+			ParcoursMain.rightMotor.setSpeed(360);
 			ParcoursMain.leftMotor.stop(true);
 			ParcoursMain.rightMotor.stop();
 			
@@ -73,7 +75,7 @@ public enum ParcoursSegment {
 			LCD.drawString("LOST " + Float.toString(diff).substring(0, 3), 4, 6);
 			
 //			ParcoursMain.leftMotor.startSynchronization();
-			float eps = 0.15f;
+			float eps = 0.1f;
 			
 			//line is left
 			if (diff < -eps) {
@@ -120,11 +122,29 @@ public enum ParcoursSegment {
 			else {
 				LCD.clear(6);
 				LCD.drawString("Else:  " + Float.toString(diff).substring(0, 3), 4, 6);
+				
+				
+				
 				ParcoursMain.leftMotor.stop(true);
 				ParcoursMain.rightMotor.stop();
 				
-				ParcoursMain.leftMotor.rotate(180, true);
+				ParcoursMain.leftMotor.resetTachoCount();
+				ParcoursMain.rightMotor.resetTachoCount();
+				
+				ParcoursMain.leftMotor.rotate(180);
 				ParcoursMain.rightMotor.rotate(180);
+				
+				int rightTacho =  ParcoursMain.rightMotor.getTachoCount();
+				int leftTacho =  ParcoursMain.leftMotor.getTachoCount();
+				
+				int TachoDiff = rightTacho - leftTacho;
+				
+				
+				if (TachoDiff > 0) {
+					ParcoursMain.leftMotor.rotate(TachoDiff);
+				} else {
+					ParcoursMain.rightMotor.rotate(-TachoDiff);
+				}
 				
 			}
 
