@@ -131,7 +131,7 @@ public enum ParcoursSegment {
 				ParcoursMain.leftMotor.resetTachoCount();
 				ParcoursMain.rightMotor.resetTachoCount();
 				
-				ParcoursMain.leftMotor.rotate(180);
+				ParcoursMain.leftMotor.rotate(180, true);
 				ParcoursMain.rightMotor.rotate(180);
 				
 				int rightTacho =  ParcoursMain.rightMotor.getTachoCount();
