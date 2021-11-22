@@ -39,7 +39,8 @@ public class ParcoursMain {
 	
 	public static void moveTo(ParcoursSegment segNew) {
 		seg = segNew;
-		lcd.drawString(seg.name, 4, 4);
+		lcd.clear();
+		lcd.drawString(seg.name, 1, 1);
 		seg.init();
 	}
 }

@@ -201,9 +201,10 @@ public enum ParcoursSegment {
 		
 		private final int baseRegulateSpeed = 250;
 		private final int baseSpeed = 360;
-		private final int sensorStopPoint = 60;
-		private final float blackEps = 0.15f;
-		private final float whiteEps = 0.4f;
+		private final int sensorStopL = 75;
+		private final int sensorStopR = 90;
+		private final float blackEps = 0.12f;
+		private final float whiteEps = 0.35f;
 		private final double diffEps = 0.075;
 		
 		private int ArraySize = 100;
@@ -224,6 +225,8 @@ public enum ParcoursSegment {
 		}
 
 		public void doStep() {
+			LCD.drawString("V:" + getRedValue(),2,2);
+			
 			if (getRedValue() > blackEps) {
 				//LCD.drawString("regulated",4,6);
 				regulatedLineTask();
@@ -262,13 +265,16 @@ public enum ParcoursSegment {
 					//Korrektur
 					else {
 						while(getRedValue() < whiteEps) {
+							LCD.drawString("K:" + getRedValue(),2,4);
+							//Links
 							if(sensorDirection == 1) {
 								ParcoursMain.rightMotor.rotate(100, false);
-							} else if(sensorDirection == -1) {
+							} 
+							//rechts
+							else if(sensorDirection == -1) {
 								ParcoursMain.leftMotor.rotate(30, true);
 								ParcoursMain.rightMotor.rotate(-100, false);
 							}
-							break;
 						}
 					}	
 					
@@ -299,12 +305,13 @@ public enum ParcoursSegment {
 			LCD.drawString("L:" + Double.toString(leftAvg).substring(1, 4) + "R:" + Double.toString(rightAvg).substring(1, 4) ,4,6);
 			}
 			
+			LCD.clear(5);
+			LCD.drawString("DiffAvg: " + diffAvg, 2,5);
+			
 			if(diffAvg > diffEps) {
 				return 1;
-			} else if (diffAvg < -diffEps) {
+			} else if (diffAvg < -(diffEps/2)) {
 				return -1;
-			} else if (leftAvg + rightAvg > blackEps) {
-				return 2;
 			} else {
 				return 0;
 			}
@@ -332,7 +339,11 @@ public enum ParcoursSegment {
 		}
 		
 		public void rotateSensorTask() {
-			sensorMover.rotateTo(sensorStopPoint * direction, true);
+			if(direction == 1) {
+				sensorMover.rotateTo(sensorStopL * direction, true);
+			} else {
+				sensorMover.rotateTo(sensorStopR * direction, true);
+			}
 		}
 		
 		public int readSensorTask() {
@@ -353,10 +364,10 @@ public enum ParcoursSegment {
 		
 		
 		public boolean checkTachoTask() {
-			if(sensorMover.getTachoCount() >= sensorStopPoint) {
+			if(sensorMover.getTachoCount() >= sensorStopL) {
 				direction = -1;
 				return false;
-			} else if(sensorMover.getTachoCount() <= -sensorStopPoint) {
+			} else if(sensorMover.getTachoCount() <= -(sensorStopR)) {
 				return true;
 			}
 			return false;
