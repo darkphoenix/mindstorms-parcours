@@ -1,6 +1,9 @@
 package edu.kit.h2t.mindstorms.group2;
 
 import lejos.utility.Delay;
+
+import java.util.ArrayList;
+
 import lejos.ev3.tools.LCDDisplay;
 import lejos.hardware.lcd.LCD;
 import lejos.hardware.motor.BaseRegulatedMotor;
@@ -186,6 +189,209 @@ public enum ParcoursSegment {
 		}	
 		
 	},
+	KOOPLINEFOLLOW("KoopLinienfolger") {
+		private final double p = 1000;
+		private final double offset = 0.3;
+		
+		private Port colorPort;
+		private EV3ColorSensor color;
+		private RegulatedMotor sensorMover;
+		private SensorMode redMode;
+		private int direction = 1;
+		
+		private final int baseRegulateSpeed = 250;
+		private final int baseSpeed = 360;
+		private final int sensorStopPoint = 60;
+		private final float blackEps = 0.15f;
+		private final float whiteEps = 0.4f;
+		private final double diffEps = 0.075;
+		
+		private int ArraySize = 100;
+		
+		private ArrayList<Float> LeftSamples;
+		private ArrayList<Float> RightSamples;
+		
+		public void init() {
+			colorPort = ParcoursMain.brick.getPort("S1");
+			color = new EV3ColorSensor(colorPort);
+			sensorMover = new EV3MediumRegulatedMotor(MotorPort.D);
+			redMode = color.getRedMode();
+			ParcoursMain.leftMotor.setSpeed(baseSpeed);
+			ParcoursMain.rightMotor.setSpeed(baseSpeed);
+			sensorMover.setSpeed(600);
+			LeftSamples = new ArrayList<Float>(ArraySize * 2);
+			RightSamples = new ArrayList<Float>(ArraySize);
+		}
+
+		public void doStep() {
+			if (getRedValue() > blackEps) {
+				//LCD.drawString("regulated",4,6);
+				regulatedLineTask();
+				//LCD.clear(6);
+			} else {
+				syncStop();
+				//LCD.drawString("search",4,6);
+				searchLine();
+				//LCD.clear(6);
+			}
+		}
+		
+		public void searchLine() {
+			while(true) {
+				//LCD.drawString("rotate",4,6);
+				rotateSensorTask();
+				//LCD.clear(6);
+				readSensorTask();
+					
+					//Drive into line direction until found.
+				
+				if(checkTachoTask()) {
+					int sensorDirection = getDirection();
+					
+					sensorMover.rotateTo(0, true);
+					
+					//Lücke
+					if (sensorDirection == 0){
+						ParcoursMain.leftMotor.setSpeed(baseSpeed);
+					
+						ParcoursMain.rightMotor.setSpeed(baseSpeed);
+						
+						ParcoursMain.leftMotor.rotate(100, true);
+						ParcoursMain.rightMotor.rotate(100, false);
+					}
+					//Korrektur
+					else {
+						while(getRedValue() < whiteEps) {
+							if(sensorDirection == 1) {
+								ParcoursMain.rightMotor.rotate(100, false);
+							} else if(sensorDirection == -1) {
+								ParcoursMain.leftMotor.rotate(30, true);
+								ParcoursMain.rightMotor.rotate(-100, false);
+							}
+							break;
+						}
+					}	
+					
+					break;
+				}
+				
+			} 
+			
+			sensorMover.rotateTo(0, true);
+			direction = 1;
+			
+			
+						
+		}
+		
+		public int getDirection() {
+			double leftAvg = calculateAverage(LeftSamples);
+			double rightAvg = calculateAverage(RightSamples);
+			
+			double diffAvg = leftAvg - rightAvg;
+			
+			
+			LeftSamples = new ArrayList<Float>(ArraySize * 2);
+			RightSamples = new ArrayList<Float>(ArraySize);
+			
+			LCD.clear(6);
+			if(Double.toString(leftAvg).length() >= 4 && Double.toString(rightAvg).length() >= 4) {
+			LCD.drawString("L:" + Double.toString(leftAvg).substring(1, 4) + "R:" + Double.toString(rightAvg).substring(1, 4) ,4,6);
+			}
+			
+			if(diffAvg > diffEps) {
+				return 1;
+			} else if (diffAvg < -diffEps) {
+				return -1;
+			} else if (leftAvg + rightAvg > blackEps) {
+				return 2;
+			} else {
+				return 0;
+			}
+			
+		}
+		
+		private double calculateAverage(ArrayList <Float> marks) {
+			  Float sum = 0f;
+			  if(!marks.isEmpty()) {
+			    for (Float mark : marks) {
+			        sum += mark;
+			    }
+			    return sum.doubleValue() / marks.size();
+			  }
+			  return sum;
+			}
+		
+		public void regulatedLineTask() {
+			int y = (int) ((getRedValue() - offset) * p);
+			
+			ParcoursMain.leftMotor.setSpeed(baseRegulateSpeed + y);
+			ParcoursMain.rightMotor.setSpeed(baseRegulateSpeed - y);
+			ParcoursMain.leftMotor.forward();
+			ParcoursMain.rightMotor.forward();
+		}
+		
+		public void rotateSensorTask() {
+			sensorMover.rotateTo(sensorStopPoint * direction, true);
+		}
+		
+		public int readSensorTask() {
+			
+			float currentValue = getRedValue();
+			if(sensorMover.getTachoCount() > 0) {
+				LeftSamples.add(currentValue);
+			} else {
+				RightSamples.add(currentValue);
+			}
+			
+			
+//			if(currentValue > blackEps) {
+//				return direction;
+//			}
+			return 0;
+		}
+		
+		
+		public boolean checkTachoTask() {
+			if(sensorMover.getTachoCount() >= sensorStopPoint) {
+				direction = -1;
+				return false;
+			} else if(sensorMover.getTachoCount() <= -sensorStopPoint) {
+				return true;
+			}
+			return false;
+		}
+		
+		public float getRedValue() {
+			float res[] = new float[1];
+			
+			redMode.fetchSample(res, 0);
+			
+			return res[0];
+		}	
+		
+		public void syncForward() {
+			ParcoursMain.leftMotor.resetTachoCount();
+			ParcoursMain.rightMotor.resetTachoCount();
+			
+			ParcoursMain.leftMotor.forward();
+			ParcoursMain.rightMotor.forward();
+			
+		}
+		
+		public void syncStop() {
+			ParcoursMain.rightMotor.stop(true);
+			ParcoursMain.leftMotor.stop();
+		}
+	}
+	,
+	AVOIDCOLLISION("Avoid") {
+		public void init() {
+		
+		}
+		public void doStep() {
+		}
+	},
 	COUNT("Count") {
 		private int cnt;
 		public void init() {
@@ -199,6 +405,7 @@ public enum ParcoursSegment {
 				ParcoursMain.moveTo(LOOP);
 		}
 	},
+	
 	LOOP("Loop forever") {
 		private int cnt;
 		public void init() { cnt = 0; }
