@@ -247,8 +247,8 @@ public enum ParcoursSegment {
 				ParcoursMain.rightMotor.rotate(-450, true);
 				ParcoursMain.leftMotor.rotate(450, false);
 				//Forward
-				ParcoursMain.leftMotor.rotate(1600, true);
-				ParcoursMain.rightMotor.rotate(1600, false);
+				ParcoursMain.leftMotor.rotate(1700, true);
+				ParcoursMain.rightMotor.rotate(1700, false);
 				//Turn right
 				ParcoursMain.rightMotor.rotate(-450, true);
 				ParcoursMain.leftMotor.rotate(450, false);
@@ -256,8 +256,8 @@ public enum ParcoursSegment {
 				ParcoursMain.leftMotor.rotate(600, true);
 				ParcoursMain.rightMotor.rotate(600, false);
 				//Turn left
-				ParcoursMain.rightMotor.rotate(450, true);
-				ParcoursMain.leftMotor.rotate(-450, false);
+				ParcoursMain.rightMotor.rotate(400, true);
+				ParcoursMain.leftMotor.rotate(-400, false);
 				color.close();
 				ParcoursMain.moveTo(MAILMAN);
 			} else if (getRedValue() > blackEps) {
@@ -301,7 +301,7 @@ public enum ParcoursSegment {
 							LCD.drawString("K:" + getRedValue(),2,4);
 							//Links
 							if(sensorDirection == 1) {
-								ParcoursMain.rightMotor.rotate(110, false);
+								ParcoursMain.rightMotor.rotate(100, false);
 							} 
 							//rechts
 							else if(sensorDirection == -1) {
@@ -521,7 +521,7 @@ public enum ParcoursSegment {
 			ParcoursMain.rightMotor.forward();
 		}
 	},*/
-	MAILMAN("Mailman") {
+	MAILMAN("Hermes") {
 		private Port colorPort;
 		private EV3ColorSensor color;
 		private RegulatedMotor sensorMover;
@@ -534,6 +534,9 @@ public enum ParcoursSegment {
 			ParcoursMain.leftMotor.setSpeed(1000);
 			ParcoursMain.leftMotor.rotate(4500, true);
 			ParcoursMain.rightMotor.rotate(4500, false);
+
+			ParcoursMain.leftMotor.rotate(-20, true);
+			ParcoursMain.rightMotor.rotate(20, false);
 		}
 		public void doStep() {
 			ParcoursMain.rightMotor.backward();
@@ -542,8 +545,8 @@ public enum ParcoursSegment {
 				ParcoursMain.rightMotor.stop();
 				ParcoursMain.leftMotor.stop();
 				
-				ParcoursMain.rightMotor.rotate(-1200, true);
-				ParcoursMain.leftMotor.rotate(1200, false);
+				ParcoursMain.rightMotor.rotate(-1100, true);
+				ParcoursMain.leftMotor.rotate(1100, false);
 				
 				ParcoursMain.rightMotor.setSpeed(10000);
 				ParcoursMain.leftMotor.setSpeed(10000);
