@@ -223,9 +223,14 @@ public enum ParcoursSegment {
 			color = new EV3ColorSensor(colorPort);
 			sensorMover = new EV3MediumRegulatedMotor(MotorPort.D);
 			redMode = color.getRedMode();
-			ultraPort = ParcoursMain.brick.getPort("S3");
-			ultraSensor = new EV3UltrasonicSensor(ultraPort);
-			ultrasonic = (SensorMode) ultraSensor.getDistanceMode();
+			boolean initialised = false;
+			while (!initialised)
+				try {
+					ultraPort = ParcoursMain.brick.getPort("S3");
+					ultraSensor = new EV3UltrasonicSensor(ultraPort);
+					ultrasonic = (SensorMode) ultraSensor.getDistanceMode();
+					initialised = true;
+				} catch (Exception e) {}
 			ParcoursMain.leftMotor.setSpeed(baseSpeed);
 			ParcoursMain.rightMotor.setSpeed(baseSpeed);
 			sensorMover.setSpeed(600);
@@ -236,20 +241,39 @@ public enum ParcoursSegment {
 		public void doStep() {
 			LCD.drawString("V:" + getDistance(),2,2);
 			
-			if (getRedValue() > blackEps && getDistance() > 0.05) {
-				//LCD.drawString("regulated",4,6);
-				regulatedLineTask();
-				//LCD.clear(6);
-			} else if (getDistance() < 0.05) {
+			if (getDistance() < 0.05) {
 				syncStop();
 				ParcoursMain.leftMotor.setSpeed(baseSpeed);
 				ParcoursMain.rightMotor.setSpeed(baseSpeed);
+				//Back off
 				ParcoursMain.leftMotor.rotate(-600, true);
 				ParcoursMain.rightMotor.rotate(-600, false);
-				ParcoursMain.rightMotor.rotate(1500, false);
+				//Turn left
+				ParcoursMain.rightMotor.rotate(500, true);
+				ParcoursMain.leftMotor.rotate(-500, false);
+				//Move
+				ParcoursMain.leftMotor.rotate(650, true);
+				ParcoursMain.rightMotor.rotate(650, false);
+				//Turn right
+				ParcoursMain.rightMotor.rotate(-450, true);
+				ParcoursMain.leftMotor.rotate(450, false);
+				//Forward
+				ParcoursMain.leftMotor.rotate(1600, true);
+				ParcoursMain.rightMotor.rotate(1600, false);
+				//Turn right
+				ParcoursMain.rightMotor.rotate(-450, true);
+				ParcoursMain.leftMotor.rotate(450, false);
+				//Move
 				ParcoursMain.leftMotor.rotate(600, true);
 				ParcoursMain.rightMotor.rotate(600, false);
-				ParcoursMain.leftMotor.rotate(1500, false);
+				//Turn left
+				ParcoursMain.rightMotor.rotate(450, true);
+				ParcoursMain.leftMotor.rotate(-450, false);
+				ParcoursMain.moveTo(null);
+			} else if (getRedValue() > blackEps) {
+				//LCD.drawString("regulated",4,6);
+				regulatedLineTask();
+				//LCD.clear(6);
 			} else {
 				syncStop();
 				//LCD.drawString("search",4,6);
