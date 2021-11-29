@@ -199,9 +199,6 @@ public enum ParcoursSegment {
 		private RegulatedMotor sensorMover;
 		private SensorMode redMode;
 
-		private Port ultraPort;
-		private EV3UltrasonicSensor ultraSensor;
-		private SensorMode ultrasonic;
 		private int direction = 1;
 		
 		private final int baseRegulateSpeed = 250;
@@ -223,14 +220,6 @@ public enum ParcoursSegment {
 			color = new EV3ColorSensor(colorPort);
 			sensorMover = new EV3MediumRegulatedMotor(MotorPort.D);
 			redMode = color.getRedMode();
-			boolean initialised = false;
-			while (!initialised)
-				try {
-					ultraPort = ParcoursMain.brick.getPort("S3");
-					ultraSensor = new EV3UltrasonicSensor(ultraPort);
-					ultrasonic = (SensorMode) ultraSensor.getDistanceMode();
-					initialised = true;
-				} catch (Exception e) {}
 			ParcoursMain.leftMotor.setSpeed(baseSpeed);
 			ParcoursMain.rightMotor.setSpeed(baseSpeed);
 			sensorMover.setSpeed(600);
@@ -239,9 +228,9 @@ public enum ParcoursSegment {
 		}
 
 		public void doStep() {
-			LCD.drawString("V:" + getDistance(),2,2);
+			LCD.drawString("V:" + ParcoursMain.getDistance(),2,2);
 			
-			if (getDistance() < 0.05) {
+			if (ParcoursMain.getDistance() < 0.05) {
 				syncStop();
 				ParcoursMain.leftMotor.setSpeed(baseSpeed);
 				ParcoursMain.rightMotor.setSpeed(baseSpeed);
@@ -269,7 +258,8 @@ public enum ParcoursSegment {
 				//Turn left
 				ParcoursMain.rightMotor.rotate(450, true);
 				ParcoursMain.leftMotor.rotate(-450, false);
-				ParcoursMain.moveTo(null);
+				color.close();
+				ParcoursMain.moveTo(MAILMAN);
 			} else if (getRedValue() > blackEps) {
 				//LCD.drawString("regulated",4,6);
 				regulatedLineTask();
@@ -424,12 +414,6 @@ public enum ParcoursSegment {
 			return res[0];
 		}	
 		
-
-		private float getDistance() {
-			float dist[] = new float[1];
-			ultrasonic.fetchSample(dist, 0);
-			return dist[0];
-		}
 		
 		public void syncForward() {
 			ParcoursMain.leftMotor.resetTachoCount();
@@ -539,27 +523,35 @@ public enum ParcoursSegment {
 	},*/
 	MAILMAN("Mailman") {
 		private Port colorPort;
-		private Port ultraPort;
 		private EV3ColorSensor color;
-		private EV3UltrasonicSensor ultraSensor;
 		private RegulatedMotor sensorMover;
 		private SensorMode redMode;
-		private SensorMode ultrasonic;
 		public void init() {
 			colorPort = ParcoursMain.brick.getPort("S1");
 			color = new EV3ColorSensor(colorPort);
 			redMode = color.getRedMode();
-			ultraPort = ParcoursMain.brick.getPort("S3");
-			ultraSensor = new EV3UltrasonicSensor(ultraPort);
-			ultrasonic = (SensorMode) ultraSensor.getDistanceMode();
+			ParcoursMain.rightMotor.setSpeed(1000);
+			ParcoursMain.leftMotor.setSpeed(1000);
+			ParcoursMain.leftMotor.rotate(4500, true);
+			ParcoursMain.rightMotor.rotate(4500, false);
 		}
 		public void doStep() {
-			
-		}
-		private float getDistance() {
-			float dist[] = new float[1];
-			ultrasonic.fetchSample(dist, 0);
-			return dist[0];
+			ParcoursMain.rightMotor.backward();
+			ParcoursMain.leftMotor.forward();
+			if(ParcoursMain.getDistance() < 0.6) {
+				ParcoursMain.rightMotor.stop();
+				ParcoursMain.leftMotor.stop();
+				
+				ParcoursMain.rightMotor.rotate(-1200, true);
+				ParcoursMain.leftMotor.rotate(1200, false);
+				
+				ParcoursMain.rightMotor.setSpeed(10000);
+				ParcoursMain.leftMotor.setSpeed(10000);
+				ParcoursMain.rightMotor.backward();
+				ParcoursMain.leftMotor.backward();
+				
+				ParcoursMain.moveTo(null);
+			}
 		}
 	};
 
