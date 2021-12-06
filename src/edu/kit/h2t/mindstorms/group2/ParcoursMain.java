@@ -18,7 +18,10 @@ public class ParcoursMain {
 	public static TextLCD lcd;
 	public static RegulatedMotor leftMotor;
 	public static RegulatedMotor rightMotor;
-
+	
+	public static int HERMES_LEFT_DELTA;
+	public static int HERMES_RIGHT_DELTA;
+	
 	private static Port ultraPort;
 	private static EV3UltrasonicSensor ultraSensor;
 	private static SensorMode ultrasonic;

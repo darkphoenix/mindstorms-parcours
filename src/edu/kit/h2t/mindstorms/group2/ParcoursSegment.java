@@ -542,6 +542,10 @@ public enum ParcoursSegment {
 		private RegulatedMotor sensorMover;
 		private SensorMode redMode;
 		private SensorMode touchMode;
+		
+		private int leftTacho;
+		private int rightTacho;
+		
 		public void init() {
 			colorPort = ParcoursMain.brick.getPort("S1");
 			color = new EV3ColorSensor(colorPort);
@@ -549,6 +553,7 @@ public enum ParcoursSegment {
 			touchPort = ParcoursMain.brick.getPort("S2");
 			touch = new EV3TouchSensor(touchPort);
 			touchMode = touch.getTouchMode();
+				
 			ParcoursMain.rightMotor.setSpeed(1000);
 			ParcoursMain.leftMotor.setSpeed(1000);
 			ParcoursMain.leftMotor.rotate(4500, true);
@@ -556,12 +561,27 @@ public enum ParcoursSegment {
 
 			ParcoursMain.leftMotor.rotate(-20, true);
 			ParcoursMain.rightMotor.rotate(20, false);
+			
+			ParcoursMain.leftMotor.resetTachoCount();
+			ParcoursMain.rightMotor.resetTachoCount();
+			
+			leftTacho = ParcoursMain.leftMotor.getTachoCount();
+			rightTacho = ParcoursMain.rightMotor.getTachoCount();
+			
 		}
 		public void doStep() {
 			ParcoursMain.rightMotor.backward();
 			ParcoursMain.leftMotor.forward();
-			if(ParcoursMain.getDistance() < 0.6) {
-				ParcoursMain.rightMotor.stop();
+			float dis = ParcoursMain.getDistance();
+			
+			LCD.drawString("Distantce: " + dis, 2, 4);
+			
+			if(dis < 0.4) {
+				Delay.msDelay(500);
+				ParcoursMain.HERMES_LEFT_DELTA = (leftTacho - ParcoursMain.leftMotor.getTachoCount());
+				ParcoursMain.HERMES_RIGHT_DELTA = (rightTacho - ParcoursMain.rightMotor.getTachoCount());
+				
+				ParcoursMain.rightMotor.stop(true);
 				ParcoursMain.leftMotor.stop();
 				
 				ParcoursMain.rightMotor.rotate(-1100, true);
@@ -588,7 +608,7 @@ public enum ParcoursSegment {
 				}
 				ParcoursMain.rightMotor.stop(true);
 				ParcoursMain.leftMotor.stop();
-				
+				color.close();
 				ParcoursMain.moveTo(BRIDGE);
 			}
 		}
@@ -607,22 +627,51 @@ public enum ParcoursSegment {
 		private RegulatedMotor sensorMover;
 		private SensorMode rgbMode;
 		
-		private final float coloreps;
+		private int leftDelta;
+		private int rightDelta;
+		
+		private final float coloreps = 0.05f;
 		
 		public void init() {
 			colorPort = ParcoursMain.brick.getPort("S1");
 			color = new EV3ColorSensor(colorPort);
 			rgbMode = color.getRGBMode();
 			
-			ParcoursMain.rightMotor.rotate(1100, true);
-			ParcoursMain.leftMotor.rotate(-1100, false);
+			leftDelta = ParcoursMain.HERMES_LEFT_DELTA;
+			rightDelta = ParcoursMain.HERMES_RIGHT_DELTA;
+			
+			ParcoursMain.leftMotor.resetTachoCount();
+			ParcoursMain.rightMotor.resetTachoCount();
+			
+			while((ParcoursMain.leftMotor.getTachoCount() - leftDelta) > 5) {
+				ParcoursMain.rightMotor.forward();
+				ParcoursMain.leftMotor.backward();
+			} 
+
+			ParcoursMain.rightMotor.stop(true);
+			ParcoursMain.leftMotor.stop();
+			
+			
+			LCD.clear();
 		}
 		public void doStep() {
 			float[] rgb = getRGBValue();
-			LCD.clear();
-			LCD.drawString("red: " + rgb[0], 2, 3);
-			LCD.drawString("green: " + rgb[1], 2, 4);
-			LCD.drawString("blue: " + rgb[2], 2, 5);
+			
+			LCD.drawString("R_Delta: " + rightDelta, 2, 1);
+			LCD.drawString("L_Delta: " + leftDelta, 2, 2);
+			LCD.drawString("R_Tacho: " + ParcoursMain.rightMotor.getTachoCount(), 2, 3);
+			LCD.drawString("L_Tacho: " + ParcoursMain.leftMotor.getTachoCount(), 2, 4);
+			
+			
+			
+//			LCD.drawString("red: " + rgb[0], 2, 3);
+//			LCD.drawString("green: " + rgb[1], 2, 4);
+//			LCD.drawString("blue: " + rgb[2], 2, 5);
+//			
+//			LCD.drawString("color:   " + getColor(), 2,6 );
+			LCD.drawString("Blue? :   " + isBlueLine(), 2,6 );
+			
+			Delay.msDelay(50);
 		}
 		
 		
@@ -648,17 +697,33 @@ public enum ParcoursSegment {
 			
 			if (red > coloreps && green <= coloreps && blue <= coloreps) {
 				//red
-				
+				return 0;
 			} else if (red <= coloreps && green > coloreps && blue <= coloreps) {
 				//green
-				
+				return 1;
 			} else if (red <= coloreps && green <= coloreps && blue > coloreps) {
 				//blue
-				
+				return 2;				
 			}
 			
 			//error
 			return -1;
+		}
+		
+		public boolean isBlueLine() {
+			float[] rgb = getRGBValue();
+			float red = rgb[0];
+			float green = rgb[1];
+			float blue = rgb[2];
+			
+			if (red > coloreps) {
+				return false;
+			} else if (red <= coloreps && (green > coloreps || blue > coloreps)) {
+				//green
+				return true;			
+			}
+			
+			return false;
 		}
 	};
 
