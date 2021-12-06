@@ -11,6 +11,7 @@ import lejos.hardware.motor.EV3MediumRegulatedMotor;
 import lejos.hardware.port.MotorPort;
 import lejos.hardware.port.Port;
 import lejos.hardware.sensor.EV3ColorSensor;
+import lejos.hardware.sensor.EV3TouchSensor;
 import lejos.hardware.sensor.EV3UltrasonicSensor;
 import lejos.hardware.sensor.SensorMode;
 import lejos.robotics.RegulatedMotor;
@@ -206,7 +207,7 @@ public enum ParcoursSegment {
 		private final int sensorStopL = 75;
 		private final int sensorStopR = 90;
 		private final float blackEps = 0.1f;
-		private final float whiteEps = 0.40f;
+		private final float whiteEps = 0.4f;
 		private final double sumWhiteEps = 0.3;
 		private final double diffEps = 0.08;
 		
@@ -428,6 +429,18 @@ public enum ParcoursSegment {
 			ParcoursMain.rightMotor.stop(true);
 			ParcoursMain.leftMotor.stop();
 		}
+		
+		public float calibrateWhite() {
+			double leftAvg = calculateAverage(LeftSamples);
+			double rightAvg = calculateAverage(RightSamples);
+			
+			double diffAvg = leftAvg - rightAvg;
+			
+			
+			LeftSamples = new ArrayList<Float>(ArraySize * 2);
+			RightSamples = new ArrayList<Float>(ArraySize);
+			return 0.4f;
+		}
 	}
 	,
 	AVOIDCOLLISION("Avoid") {
@@ -523,13 +536,19 @@ public enum ParcoursSegment {
 	},*/
 	MAILMAN("Hermes") {
 		private Port colorPort;
+		private Port touchPort;
 		private EV3ColorSensor color;
+		private EV3TouchSensor touch;
 		private RegulatedMotor sensorMover;
 		private SensorMode redMode;
+		private SensorMode touchMode;
 		public void init() {
 			colorPort = ParcoursMain.brick.getPort("S1");
 			color = new EV3ColorSensor(colorPort);
 			redMode = color.getRedMode();
+			touchPort = ParcoursMain.brick.getPort("S2");
+			touch = new EV3TouchSensor(touchPort);
+			touchMode = touch.getTouchMode();
 			ParcoursMain.rightMotor.setSpeed(1000);
 			ParcoursMain.leftMotor.setSpeed(1000);
 			ParcoursMain.leftMotor.rotate(4500, true);
@@ -553,8 +572,93 @@ public enum ParcoursSegment {
 				ParcoursMain.rightMotor.backward();
 				ParcoursMain.leftMotor.backward();
 				
-				ParcoursMain.moveTo(null);
+//				Delay.msDelay(3000);
+				
+				boolean abort = false;
+				
+				while(true) {
+					float touched = getTouchValue();
+					LCD.drawString("Touch " + touched, 2,5);
+					if(touched == 1.0f) {
+						break;
+					} else if (touched == 0) {
+					} else {
+						break;
+					}
+				}
+				ParcoursMain.rightMotor.stop(true);
+				ParcoursMain.leftMotor.stop();
+				
+				ParcoursMain.moveTo(BRIDGE);
 			}
+		}
+		
+		public float getTouchValue() {
+			float res[] = new float[1];
+			
+			touchMode.fetchSample(res, 0);
+			
+			return res[0];
+		}	
+	},
+	BRIDGE("Bridge") {
+		private Port colorPort;
+		private EV3ColorSensor color;
+		private RegulatedMotor sensorMover;
+		private SensorMode rgbMode;
+		
+		private final float coloreps;
+		
+		public void init() {
+			colorPort = ParcoursMain.brick.getPort("S1");
+			color = new EV3ColorSensor(colorPort);
+			rgbMode = color.getRGBMode();
+			
+			ParcoursMain.rightMotor.rotate(1100, true);
+			ParcoursMain.leftMotor.rotate(-1100, false);
+		}
+		public void doStep() {
+			float[] rgb = getRGBValue();
+			LCD.clear();
+			LCD.drawString("red: " + rgb[0], 2, 3);
+			LCD.drawString("green: " + rgb[1], 2, 4);
+			LCD.drawString("blue: " + rgb[2], 2, 5);
+		}
+		
+		
+		public float[] getRGBValue() {
+			float res[] = new float[3];
+			
+			rgbMode.fetchSample(res, 0);
+			
+			return res;
+		}	
+		
+		/*
+		 * return -1 as error value.
+		 * return 0 for red,
+		 * return 1 for green,
+		 * return 2 for blue.
+		 */
+		public int getColor() {
+			float[] rgb = getRGBValue();
+			float red = rgb[0];
+			float green = rgb[1];
+			float blue = rgb[2];
+			
+			if (red > coloreps && green <= coloreps && blue <= coloreps) {
+				//red
+				
+			} else if (red <= coloreps && green > coloreps && blue <= coloreps) {
+				//green
+				
+			} else if (red <= coloreps && green <= coloreps && blue > coloreps) {
+				//blue
+				
+			}
+			
+			//error
+			return -1;
 		}
 	};
 
