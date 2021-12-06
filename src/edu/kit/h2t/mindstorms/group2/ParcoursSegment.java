@@ -576,13 +576,15 @@ public enum ParcoursSegment {
 			
 			LCD.drawString("Distantce: " + dis, 2, 4);
 			
-			if(dis < 0.4) {
-				Delay.msDelay(500);
+			if(dis < 0.6) {
+				ParcoursMain.rightMotor.stop(true);
+				ParcoursMain.leftMotor.stop();
+				
 				ParcoursMain.HERMES_LEFT_DELTA = (leftTacho - ParcoursMain.leftMotor.getTachoCount());
 				ParcoursMain.HERMES_RIGHT_DELTA = (rightTacho - ParcoursMain.rightMotor.getTachoCount());
 				
-				ParcoursMain.rightMotor.stop(true);
-				ParcoursMain.leftMotor.stop();
+				//Stop after finding box
+				Delay.msDelay(250);
 				
 				ParcoursMain.rightMotor.rotate(-1100, true);
 				ParcoursMain.leftMotor.rotate(1100, false);
