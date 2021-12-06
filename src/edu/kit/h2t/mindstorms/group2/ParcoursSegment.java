@@ -602,12 +602,16 @@ public enum ParcoursSegment {
 					float touched = getTouchValue();
 					LCD.drawString("Touch " + touched, 2,5);
 					if(touched == 1.0f) {
-						break;
+						if(abort) {
+							break;
+						}
+						abort = true;
 					} else if (touched == 0) {
 					} else {
 						break;
 					}
 				}
+
 				ParcoursMain.rightMotor.stop(true);
 				ParcoursMain.leftMotor.stop();
 				color.close();
@@ -671,7 +675,7 @@ public enum ParcoursSegment {
 //			LCD.drawString("blue: " + rgb[2], 2, 5);
 //			
 //			LCD.drawString("color:   " + getColor(), 2,6 );
-			LCD.drawString("Blue? :   " + isBlueLine(), 2,6 );
+			LCD.drawString("Blue? :   " + isBlueLine() + "!", 2,6 );
 			
 			Delay.msDelay(50);
 		}
