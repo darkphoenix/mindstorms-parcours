@@ -680,8 +680,13 @@ public enum ParcoursSegment {
 			
 			while(!blueFound) {
 				
+				ParcoursMain.rightMotor.forward();
+				ParcoursMain.leftMotor.forward();
+				
 				if(isBlueLine()) {
 					blueFound = true;
+					ParcoursMain.rightMotor.stop(true);
+					ParcoursMain.leftMotor.stop();
 					break;
 				}	
 			}
