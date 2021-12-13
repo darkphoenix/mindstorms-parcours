@@ -236,8 +236,8 @@ public enum ParcoursSegment {
 				ParcoursMain.leftMotor.setSpeed(baseSpeed);
 				ParcoursMain.rightMotor.setSpeed(baseSpeed);
 				//Back off
-				ParcoursMain.leftMotor.rotate(-600, true);
-				ParcoursMain.rightMotor.rotate(-600, false);
+				ParcoursMain.leftMotor.rotate(-400, true);
+				ParcoursMain.rightMotor.rotate(-400, false);
 				//Turn left
 				ParcoursMain.rightMotor.rotate(500, true);
 				ParcoursMain.leftMotor.rotate(-500, false);
@@ -245,11 +245,11 @@ public enum ParcoursSegment {
 				ParcoursMain.leftMotor.rotate(700, true);
 				ParcoursMain.rightMotor.rotate(700, false);
 				//Turn right
-				ParcoursMain.rightMotor.rotate(-450, true);
-				ParcoursMain.leftMotor.rotate(450, false);
+				ParcoursMain.rightMotor.rotate(-440, true);
+				ParcoursMain.leftMotor.rotate(440, false);
 				//Forward
-				ParcoursMain.leftMotor.rotate(1700, true);
-				ParcoursMain.rightMotor.rotate(1700, false);
+				ParcoursMain.leftMotor.rotate(1400, true);
+				ParcoursMain.rightMotor.rotate(1400, false);
 				//Turn right
 				ParcoursMain.rightMotor.rotate(-450, true);
 				ParcoursMain.leftMotor.rotate(450, false);
@@ -565,8 +565,8 @@ public enum ParcoursSegment {
 				
 			ParcoursMain.rightMotor.setSpeed(1000);
 			ParcoursMain.leftMotor.setSpeed(1000);
-			ParcoursMain.leftMotor.rotate(4500, true);
-			ParcoursMain.rightMotor.rotate(4500, false);
+			ParcoursMain.leftMotor.rotate(4800, true);
+			ParcoursMain.rightMotor.rotate(4800, false);
 
 			ParcoursMain.leftMotor.rotate(-20, true);
 			ParcoursMain.rightMotor.rotate(20, false);
@@ -585,7 +585,7 @@ public enum ParcoursSegment {
 			
 			LCD.drawString("Distantce: " + dis, 2, 4);
 			
-			if(dis < 0.6) {
+			if(dis < 0.4) {
 				ParcoursMain.rightMotor.stop(true);
 				ParcoursMain.leftMotor.stop();
 				
@@ -596,11 +596,11 @@ public enum ParcoursSegment {
 				Delay.msDelay(250);
 				
 				//Back off
-				ParcoursMain.leftMotor.rotate(-600, true);
-				ParcoursMain.rightMotor.rotate(-600, false);
+				//ParcoursMain.leftMotor.rotate(-300, true);
+				//ParcoursMain.rightMotor.rotate(-300, false);
 				
-				ParcoursMain.rightMotor.rotate(-1100, true);
-				ParcoursMain.leftMotor.rotate(1100, false);
+				ParcoursMain.rightMotor.rotate(-1200, true);
+				ParcoursMain.leftMotor.rotate(1200, false);
 				
 				ParcoursMain.rightMotor.setSpeed(10000);
 				ParcoursMain.leftMotor.setSpeed(10000);
@@ -629,6 +629,11 @@ public enum ParcoursSegment {
 
 				ParcoursMain.rightMotor.stop(true);
 				ParcoursMain.leftMotor.stop();
+				
+				//Back off
+				ParcoursMain.leftMotor.rotate(600, true);
+				ParcoursMain.rightMotor.rotate(600, false);
+				
 				color.close();
 				ParcoursMain.moveTo(BRIDGE);
 			}
