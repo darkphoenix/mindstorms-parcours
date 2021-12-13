@@ -287,7 +287,7 @@ public enum ParcoursSegment {
 					
 					sensorMover.rotateTo(0, true);
 					
-					//L�cke
+					//Lücke
 					if (sensorDirection == 0){
 						ParcoursMain.leftMotor.setSpeed(baseSpeed);
 					
@@ -585,6 +585,10 @@ public enum ParcoursSegment {
 				
 				//Stop after finding box
 				Delay.msDelay(250);
+				
+				//Back off
+				ParcoursMain.leftMotor.rotate(-600, true);
+				ParcoursMain.rightMotor.rotate(-600, false);
 				
 				ParcoursMain.rightMotor.rotate(-1100, true);
 				ParcoursMain.leftMotor.rotate(1100, false);
