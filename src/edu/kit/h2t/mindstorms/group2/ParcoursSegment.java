@@ -431,6 +431,15 @@ public enum ParcoursSegment {
 		}
 		
 		public float calibrateWhite() {
+			sensorMover.rotateTo(-sensorStopL, true);
+			while(sensorMover.getTachoCount() < sensorStopL) {
+				readSensorTask();
+			}
+			sensorMover.rotateTo(sensorStopR, true);
+			while(sensorMover.getTachoCount() > -(sensorStopR)) {
+				readSensorTask();
+			}
+			
 			double leftAvg = calculateAverage(LeftSamples);
 			double rightAvg = calculateAverage(RightSamples);
 			
