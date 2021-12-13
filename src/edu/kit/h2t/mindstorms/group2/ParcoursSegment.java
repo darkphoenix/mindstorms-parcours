@@ -226,6 +226,7 @@ public enum ParcoursSegment {
 			sensorMover.setSpeed(600);
 			LeftSamples = new ArrayList<Float>(ArraySize * 2);
 			RightSamples = new ArrayList<Float>(ArraySize);
+			calibrateWhite();
 		}
 
 		public void doStep() {
@@ -431,11 +432,11 @@ public enum ParcoursSegment {
 		}
 		
 		public float calibrateWhite() {
-			sensorMover.rotateTo(-sensorStopL, true);
+			sensorMover.rotateTo(sensorStopL, true);
 			while(sensorMover.getTachoCount() < sensorStopL) {
 				readSensorTask();
 			}
-			sensorMover.rotateTo(sensorStopR, true);
+			sensorMover.rotateTo(-sensorStopR, true);
 			while(sensorMover.getTachoCount() > -(sensorStopR)) {
 				readSensorTask();
 			}
@@ -443,8 +444,10 @@ public enum ParcoursSegment {
 			double leftAvg = calculateAverage(LeftSamples);
 			double rightAvg = calculateAverage(RightSamples);
 			
-			double diffAvg = leftAvg - rightAvg;
-			
+			LCD.clear(6);
+			if(Double.toString(leftAvg).length() >= 4 && Double.toString(rightAvg).length() >= 4) {
+			LCD.drawString("L:" + Double.toString(leftAvg).substring(1, 4) + "R:" + Double.toString(rightAvg).substring(1, 4) ,4,6);
+			}
 			
 			LeftSamples = new ArrayList<Float>(ArraySize * 2);
 			RightSamples = new ArrayList<Float>(ArraySize);
@@ -741,11 +744,11 @@ public enum ParcoursSegment {
 		}
 		
 		public void readBlue() {
-			sensorMover.rotateTo(-sensorStopL, true);
+			sensorMover.rotateTo(sensorStopL, true);
 			while(sensorMover.getTachoCount() < sensorStopL) {
 				readSensorTask();
 			}
-			sensorMover.rotateTo(sensorStopR, true);
+			sensorMover.rotateTo(-sensorStopR, true);
 			while(sensorMover.getTachoCount() > -(sensorStopR)) {
 				readSensorTask();
 			}
