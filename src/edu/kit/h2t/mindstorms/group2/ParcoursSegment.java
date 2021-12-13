@@ -680,7 +680,7 @@ public enum ParcoursSegment {
 		private final int sensorStopL = 75;
 		private final int sensorStopR = 90;
 		
-		private final double diffEps = 0.08;
+		private final double diffEps = 0.1;
 		private final double sumBlueEps = 0.3;
 		
 		private final int ArraySize = 100;
@@ -705,6 +705,8 @@ public enum ParcoursSegment {
 			
 			leftDelta = ParcoursMain.HERMES_LEFT_DELTA;
 			rightDelta = ParcoursMain.HERMES_RIGHT_DELTA;
+			
+			sensorMover = new EV3MediumRegulatedMotor(MotorPort.D);
 			
 			ParcoursMain.leftMotor.resetTachoCount();
 			ParcoursMain.rightMotor.resetTachoCount();
@@ -746,7 +748,7 @@ public enum ParcoursSegment {
 					ParcoursMain.rightMotor.stop(true);
 					ParcoursMain.leftMotor.stop();
 					readBlue();
-					LCD.drawInt(getDirection(), 2, 7);				
+					LCD.drawString("D: " + getDirection(), 2, 7);				
 					break;
 				}	
 			}
@@ -774,6 +776,7 @@ public enum ParcoursSegment {
 				while(sensorMover.getTachoCount() > -(sensorStopR)) {
 					readSensorTask();
 				}
+				sensorMover.rotateTo(0);
 			} else {
 				System.out.println("NULL!");
 			}
@@ -810,7 +813,11 @@ public enum ParcoursSegment {
 		
 		public void readSensorTask() {
 			
-			float currentValue = getColor();
+			float currentValue = 0;
+			
+			if(isBlueLine()){
+				currentValue = 1;
+			}
 			if(sensorMover.getTachoCount() > 0) {
 				LeftSamples.add(currentValue);
 			} else {
@@ -837,7 +844,7 @@ public enum ParcoursSegment {
 			double leftAvg = calculateAverage(LeftSamples);
 			double rightAvg = calculateAverage(RightSamples);
 			
-			double diffAvg = leftAvg - rightAvg;
+			double diffAvg = Math.abs(leftAvg - rightAvg);
 			
 			
 			LeftSamples = new ArrayList<Float>(ArraySize * 2);
@@ -845,18 +852,22 @@ public enum ParcoursSegment {
 			
 			LCD.clear(6);
 			if(Double.toString(leftAvg).length() >= 4 && Double.toString(rightAvg).length() >= 4) {
-			LCD.drawString("L:" + Double.toString(leftAvg).substring(1, 4) + "R:" + Double.toString(rightAvg).substring(1, 4) ,4,6);
+			LCD.drawString("L:" + Double.toString(leftAvg).substring(0, 4) + "R:" + Double.toString(rightAvg).substring(0, 4) ,4,6);
+			} else if(Double.toString(leftAvg).length() >= 3 && Double.toString(rightAvg).length() >= 3) {
+				LCD.drawString("L:" + Double.toString(leftAvg).substring(0, 3) + "R:" + Double.toString(rightAvg).substring(0, 3) ,4,6);
+			} else {
+				LCD.drawString("L:" + Double.toString(leftAvg) + "R:" + Double.toString(rightAvg) ,4,6);
 			}
-			
+			 
 			LCD.clear(5);
 			LCD.drawString("DiffAvg: " + diffAvg, 2,5);
 			
-			if(diffAvg > diffEps) {
-				return 1;
-			} else if (diffAvg < -diffEps || ((leftAvg+rightAvg) > sumBlueEps)) {
+			if(diffAvg < diffEps) {
+				return 0;
+			} else if (leftAvg > rightAvg) {
 				return -1;
 			} else {
-				return 0;
+				return 1;
 			}
 			
 		}
