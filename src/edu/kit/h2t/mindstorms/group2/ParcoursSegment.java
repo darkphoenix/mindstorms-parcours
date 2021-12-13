@@ -659,6 +659,7 @@ public enum ParcoursSegment {
 				ParcoursMain.rightMotor.rotate(600, false);
 				
 				color.close();
+				sensorMover.close();
 				ParcoursMain.moveTo(BRIDGE);
 			}
 		}
@@ -791,9 +792,8 @@ public enum ParcoursSegment {
 		*/
 		public void allignBlue(double diff) {
 			int baseRotate = 360;
-			int dir = (int) diff;
-			ParcoursMain.leftMotor.rotate(360 * -dir, true);
-			ParcoursMain.rightMotor.rotate(360 * dir, false);
+			ParcoursMain.leftMotor.rotate((int) (baseRotate * -diff), true);
+			ParcoursMain.rightMotor.rotate((int) (baseRotate * diff), false);
 		}
 		
 		/*
