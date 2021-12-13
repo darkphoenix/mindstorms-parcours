@@ -784,11 +784,16 @@ public enum ParcoursSegment {
 			}
 		}
 			
-						
+		
+		/*  Diff = leftAvg - rightAvg
+		 * 	Left means positive diff
+			Right means negative diff
+		*/
 		public void allignBlue(double diff) {
-			
-			
-			
+			int baseRotate = 360;
+			int dir = (int) diff;
+			ParcoursMain.leftMotor.rotate(360 * -dir, true);
+			ParcoursMain.rightMotor.rotate(360 * dir, false);
 		}
 		
 		/*
