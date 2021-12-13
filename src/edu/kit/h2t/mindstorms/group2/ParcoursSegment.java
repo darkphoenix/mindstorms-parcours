@@ -242,8 +242,8 @@ public enum ParcoursSegment {
 				ParcoursMain.rightMotor.rotate(500, true);
 				ParcoursMain.leftMotor.rotate(-500, false);
 				//Move
-				ParcoursMain.leftMotor.rotate(650, true);
-				ParcoursMain.rightMotor.rotate(650, false);
+				ParcoursMain.leftMotor.rotate(700, true);
+				ParcoursMain.rightMotor.rotate(700, false);
 				//Turn right
 				ParcoursMain.rightMotor.rotate(-450, true);
 				ParcoursMain.leftMotor.rotate(450, false);
@@ -257,8 +257,8 @@ public enum ParcoursSegment {
 				ParcoursMain.leftMotor.rotate(600, true);
 				ParcoursMain.rightMotor.rotate(600, false);
 				//Turn left
-				ParcoursMain.rightMotor.rotate(400, true);
-				ParcoursMain.leftMotor.rotate(-400, false);
+				ParcoursMain.rightMotor.rotate(450, true);
+				ParcoursMain.leftMotor.rotate(-450, false);
 				color.close();
 				ParcoursMain.moveTo(MAILMAN);
 			} else if (getRedValue() > blackEps) {
@@ -636,6 +636,8 @@ public enum ParcoursSegment {
 		private int leftDelta;
 		private int rightDelta;
 		
+		private boolean blueFound = false;
+		
 		private final float coloreps = 0.05f;
 		
 		public void init() {
@@ -669,13 +671,20 @@ public enum ParcoursSegment {
 			LCD.drawString("L_Tacho: " + ParcoursMain.leftMotor.getTachoCount(), 2, 4);
 			
 			
-			
 //			LCD.drawString("red: " + rgb[0], 2, 3);
 //			LCD.drawString("green: " + rgb[1], 2, 4);
 //			LCD.drawString("blue: " + rgb[2], 2, 5);
 //			
 //			LCD.drawString("color:   " + getColor(), 2,6 );
 			LCD.drawString("Blue? :   " + isBlueLine() + "!", 2,6 );
+			
+			while(!blueFound) {
+				
+				if(isBlueLine()) {
+					blueFound = true;
+					break;
+				}	
+			}
 			
 			Delay.msDelay(50);
 		}
@@ -687,7 +696,9 @@ public enum ParcoursSegment {
 			rgbMode.fetchSample(res, 0);
 			
 			return res;
-		}	
+		}
+			
+						
 		
 		/*
 		 * return -1 as error value.
