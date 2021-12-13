@@ -748,7 +748,9 @@ public enum ParcoursSegment {
 					ParcoursMain.rightMotor.stop(true);
 					ParcoursMain.leftMotor.stop();
 					readBlue();
-					LCD.drawString("D: " + getDirection(), 2, 7);				
+					double diff = getDirectionDiff();
+					LCD.drawString("D: " + diff, 2, 7);
+					allignBlue(diff);
 					break;
 				}	
 			}
@@ -783,6 +785,11 @@ public enum ParcoursSegment {
 		}
 			
 						
+		public void allignBlue(double diff) {
+			
+			
+			
+		}
 		
 		/*
 		 * return -1 as error value.
@@ -840,12 +847,28 @@ public enum ParcoursSegment {
 			
 			return false;
 		}
+	
 		public int getDirection() {
 			double leftAvg = calculateAverage(LeftSamples);
 			double rightAvg = calculateAverage(RightSamples);
 			
-			double diffAvg = Math.abs(leftAvg - rightAvg);
+			double diffAvg = Math.abs(getDirectionDiff());
 			
+			if(diffAvg < diffEps) {
+				return 0;
+			} else if (leftAvg > rightAvg) {
+				return -1;
+			} else {
+				return 1;
+			}
+			
+		}
+		
+		public double getDirectionDiff() {
+			double leftAvg = calculateAverage(LeftSamples);
+			double rightAvg = calculateAverage(RightSamples);
+			
+			double diffAvg = leftAvg - rightAvg;
 			
 			LeftSamples = new ArrayList<Float>(ArraySize * 2);
 			RightSamples = new ArrayList<Float>(ArraySize);
@@ -862,14 +885,7 @@ public enum ParcoursSegment {
 			LCD.clear(5);
 			LCD.drawString("DiffAvg: " + diffAvg, 2,5);
 			
-			if(diffAvg < diffEps) {
-				return 0;
-			} else if (leftAvg > rightAvg) {
-				return -1;
-			} else {
-				return 1;
-			}
-			
+			return diffAvg;
 		}
 		
 		private double calculateAverage(ArrayList <Float> marks) {
