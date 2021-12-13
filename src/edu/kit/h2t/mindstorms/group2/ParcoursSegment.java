@@ -435,14 +435,14 @@ public enum ParcoursSegment {
 		public float calibrateWhite() {
 			ArrayList<Float>MidSamples = new ArrayList<Float>(ArraySize);
 			
-			int offset_angle = 25;
+			int offset_angle = 15;
 			sensorMover.rotateTo(offset_angle);
 			sensorMover.rotateTo(sensorStopL, true);
 			while(sensorMover.getTachoCount() < sensorStopL) {
 				readSensorTask();
 			}
 			sensorMover.rotateTo(offset_angle);
-			sensorMover.rotateTo(-offset_angle);
+			sensorMover.rotateTo(-offset_angle, true);
 			while(sensorMover.getTachoCount() > -(offset_angle)) {
 				float currentValue = getRedValue();
 				MidSamples.add(currentValue);
