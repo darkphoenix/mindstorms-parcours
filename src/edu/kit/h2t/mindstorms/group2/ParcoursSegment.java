@@ -596,17 +596,19 @@ public enum ParcoursSegment {
 				
 //				Delay.msDelay(3000);
 				
-				boolean abort = false;
+				int abort = 0;
 				
 				while(true) {
 					float touched = getTouchValue();
 					LCD.drawString("Touch " + touched, 2,5);
 					if(touched == 1.0f) {
-						if(abort) {
+						if(abort > 1) {
 							break;
 						}
-						abort = true;
+						abort = 1;
 					} else if (touched == 0) {
+						if(abort == 1)
+							abort = 2;
 					} else {
 						break;
 					}
