@@ -639,6 +639,14 @@ public enum ParcoursSegment {
 		private RegulatedMotor sensorMover;
 		private SensorMode rgbMode;
 		
+		private final double diffEps = 0.08;
+		private final double sumBlueEps = 0.3;
+		
+		private final int ArraySize = 100;
+		
+		private ArrayList<Float> LeftSamples;
+		private ArrayList<Float> RightSamples;
+		
 		private int leftDelta;
 		private int rightDelta;
 		
@@ -650,6 +658,9 @@ public enum ParcoursSegment {
 			colorPort = ParcoursMain.brick.getPort("S1");
 			color = new EV3ColorSensor(colorPort);
 			rgbMode = color.getRGBMode();
+			
+			LeftSamples = new ArrayList<Float>(ArraySize * 2);
+			RightSamples = new ArrayList<Float>(ArraySize);
 			
 			leftDelta = ParcoursMain.HERMES_LEFT_DELTA;
 			rightDelta = ParcoursMain.HERMES_RIGHT_DELTA;
@@ -682,10 +693,10 @@ public enum ParcoursSegment {
 //			LCD.drawString("blue: " + rgb[2], 2, 5);
 //			
 //			LCD.drawString("color:   " + getColor(), 2,6 );
-			LCD.drawString("Blue? :   " + isBlueLine() + "!", 2,6 );
 			
 			while(!blueFound) {
 				
+				LCD.drawString("Blue? :   " + isBlueLine() + "!", 2,6 );
 				ParcoursMain.rightMotor.forward();
 				ParcoursMain.leftMotor.forward();
 				
@@ -753,6 +764,44 @@ public enum ParcoursSegment {
 			
 			return false;
 		}
+		public int getDirection() {
+			double leftAvg = calculateAverage(LeftSamples);
+			double rightAvg = calculateAverage(RightSamples);
+			
+			double diffAvg = leftAvg - rightAvg;
+			
+			
+			LeftSamples = new ArrayList<Float>(ArraySize * 2);
+			RightSamples = new ArrayList<Float>(ArraySize);
+			
+			LCD.clear(6);
+			if(Double.toString(leftAvg).length() >= 4 && Double.toString(rightAvg).length() >= 4) {
+			LCD.drawString("L:" + Double.toString(leftAvg).substring(1, 4) + "R:" + Double.toString(rightAvg).substring(1, 4) ,4,6);
+			}
+			
+			LCD.clear(5);
+			LCD.drawString("DiffAvg: " + diffAvg, 2,5);
+			
+			if(diffAvg > diffEps) {
+				return 1;
+			} else if (diffAvg < -diffEps || ((leftAvg+rightAvg) > sumBlueEps)) {
+				return -1;
+			} else {
+				return 0;
+			}
+			
+		}
+		
+		private double calculateAverage(ArrayList <Float> marks) {
+			  Float sum = 0f;
+			  if(!marks.isEmpty()) {
+			    for (Float mark : marks) {
+			        sum += mark;
+			    }
+			    return sum.doubleValue() / marks.size();
+			  }
+			  return sum;
+			}
 	};
 
 	public String name;
