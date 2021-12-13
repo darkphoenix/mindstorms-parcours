@@ -607,7 +607,7 @@ public enum ParcoursSegment {
 			ParcoursMain.leftMotor.forward();
 			float dis = ParcoursMain.getDistance();
 			
-			LCD.drawString("Distantce: " + dis, 2, 4);
+			LCD.drawString("Distance: " + dis, 2, 4);
 			
 			if(dis < 0.4) {
 				ParcoursMain.rightMotor.stop(true);
@@ -637,15 +637,14 @@ public enum ParcoursSegment {
 				
 				while(true) {
 					float touched = getTouchValue();
-					LCD.drawString("Touch " + touched, 2,5);
+					LCD.drawString("Touch " + abort, 2,5);
 					if(touched == 1.0f) {
-						if(abort > 1) {
+						if(abort >= 0)
+							abort++;
+						if(abort > 100) {
 							break;
 						}
-						abort = 1;
 					} else if (touched == 0) {
-						if(abort == 1)
-							abort = 2;
 					} else {
 						break;
 					}
