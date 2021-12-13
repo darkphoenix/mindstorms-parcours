@@ -641,7 +641,7 @@ public enum ParcoursSegment {
 					if(touched == 1.0f) {
 						if(abort >= 0)
 							abort++;
-						if(abort > 1000) {
+						if(abort > 600) {
 							break;
 						}
 					} else if (touched == 0) {
