@@ -304,14 +304,15 @@ public enum ParcoursSegment {
 							LCD.drawString("K:" + getRedValue(),2,4);
 							//Links
 							if(sensorDirection == 1) {
-								ParcoursMain.rightMotor.rotate(100, false);
+								ParcoursMain.rightMotor.rotate(100, true);
 							} 
 							//rechts
 							else if(sensorDirection == -1) {
-								ParcoursMain.leftMotor.rotate(30, true);
-								ParcoursMain.rightMotor.rotate(-100, false);
+								ParcoursMain.leftMotor.rotate(100, true);
+								ParcoursMain.rightMotor.rotate(-100, true);
 							}
 						}
+						syncStop();
 					}	
 					
 					break;
