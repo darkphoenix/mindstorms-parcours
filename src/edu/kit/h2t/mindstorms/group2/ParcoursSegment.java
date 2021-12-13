@@ -639,6 +639,9 @@ public enum ParcoursSegment {
 		private RegulatedMotor sensorMover;
 		private SensorMode rgbMode;
 		
+		private final int sensorStopL = 75;
+		private final int sensorStopR = 90;
+		
 		private final double diffEps = 0.08;
 		private final double sumBlueEps = 0.3;
 		
@@ -704,9 +707,12 @@ public enum ParcoursSegment {
 					blueFound = true;
 					ParcoursMain.rightMotor.stop(true);
 					ParcoursMain.leftMotor.stop();
+					readBlue();
+					LCD.drawInt(getDirection(), 2, 7);
 					break;
 				}	
 			}
+			
 			
 			Delay.msDelay(50);
 		}
@@ -718,6 +724,18 @@ public enum ParcoursSegment {
 			rgbMode.fetchSample(res, 0);
 			
 			return res;
+		}
+		
+		public void readBlue() {
+			sensorMover.rotateTo(-sensorStopL, true);
+			while(sensorMover.getTachoCount() < sensorStopL) {
+				readSensorTask();
+			}
+			sensorMover.rotateTo(sensorStopR, true);
+			while(sensorMover.getTachoCount() > -(sensorStopR)) {
+				readSensorTask();
+			}
+			
 		}
 			
 						
@@ -748,6 +766,16 @@ public enum ParcoursSegment {
 			//error
 			return -1;
 		}
+		
+		public void readSensorTask() {
+			
+			float currentValue = getColor();
+			if(sensorMover.getTachoCount() > 0) {
+				LeftSamples.add(currentValue);
+			} else {
+				RightSamples.add(currentValue);
+			}
+		}	
 		
 		public boolean isBlueLine() {
 			float[] rgb = getRGBValue();
