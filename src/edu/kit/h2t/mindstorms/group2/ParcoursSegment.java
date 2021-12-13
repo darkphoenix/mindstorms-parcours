@@ -746,7 +746,7 @@ public enum ParcoursSegment {
 					ParcoursMain.rightMotor.stop(true);
 					ParcoursMain.leftMotor.stop();
 					readBlue();
-					LCD.drawInt(getDirection(), 2, 7);
+					LCD.drawInt(getDirection(), 2, 7);				
 					break;
 				}	
 			}
@@ -765,15 +765,18 @@ public enum ParcoursSegment {
 		}
 		
 		public void readBlue() {
-			sensorMover.rotateTo(sensorStopL, true);
-			while(sensorMover.getTachoCount() < sensorStopL) {
-				readSensorTask();
+			if(sensorMover != null) {
+				sensorMover.rotateTo(sensorStopL, true);
+				while(sensorMover.getTachoCount() < sensorStopL) {
+					readSensorTask();
+				}
+				sensorMover.rotateTo(-sensorStopR, true);
+				while(sensorMover.getTachoCount() > -(sensorStopR)) {
+					readSensorTask();
+				}
+			} else {
+				System.out.println("NULL!");
 			}
-			sensorMover.rotateTo(-sensorStopR, true);
-			while(sensorMover.getTachoCount() > -(sensorStopR)) {
-				readSensorTask();
-			}
-			
 		}
 			
 						
