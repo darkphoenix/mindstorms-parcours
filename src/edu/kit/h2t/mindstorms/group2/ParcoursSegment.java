@@ -308,7 +308,7 @@ public enum ParcoursSegment {
 							} 
 							//rechts
 							else if(sensorDirection == -1) {
-								//ParcoursMain.leftMotor.rotate(100, true);
+								ParcoursMain.leftMotor.rotate(150, true);
 								ParcoursMain.rightMotor.rotate(-100, true);
 							}
 						}
