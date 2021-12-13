@@ -207,7 +207,7 @@ public enum ParcoursSegment {
 		private final int sensorStopL = 75;
 		private final int sensorStopR = 90;
 		private final float blackEps = 0.1f;
-		private final float whiteEps = 0.4f;
+		private double whiteEps = 0.4f;
 		private final double sumWhiteEps = 0.3;
 		private final double diffEps = 0.08;
 		
@@ -231,6 +231,7 @@ public enum ParcoursSegment {
 
 		public void doStep() {
 			LCD.drawString("V:" + ParcoursMain.getDistance(),2,2);
+			LCD.drawString("W:" + whiteEps,2,3);
 			
 			if (ParcoursMain.getDistance() < 0.05) {
 				syncStop();
@@ -432,25 +433,44 @@ public enum ParcoursSegment {
 		}
 		
 		public float calibrateWhite() {
+			ArrayList<Float>MidSamples = new ArrayList<Float>(ArraySize);
+			
+			int offset_angle = 25;
+			sensorMover.rotateTo(offset_angle);
 			sensorMover.rotateTo(sensorStopL, true);
 			while(sensorMover.getTachoCount() < sensorStopL) {
 				readSensorTask();
 			}
-			sensorMover.rotateTo(-sensorStopR, true);
+			sensorMover.rotateTo(offset_angle);
+			sensorMover.rotateTo(-offset_angle);
+			while(sensorMover.getTachoCount() > -(offset_angle)) {
+				float currentValue = getRedValue();
+				MidSamples.add(currentValue);
+			}
+			
+			sensorMover.rotateTo(-(sensorStopR), true);
 			while(sensorMover.getTachoCount() > -(sensorStopR)) {
 				readSensorTask();
 			}
 			
+			sensorMover.rotateTo(0);
+			
+			
+			
 			double leftAvg = calculateAverage(LeftSamples);
 			double rightAvg = calculateAverage(RightSamples);
+			double midAvg = calculateAverage(MidSamples);
 			
-			LCD.clear(6);
-			if(Double.toString(leftAvg).length() >= 4 && Double.toString(rightAvg).length() >= 4) {
-			LCD.drawString("L:" + Double.toString(leftAvg).substring(1, 4) + "R:" + Double.toString(rightAvg).substring(1, 4) ,4,6);
+			whiteEps = midAvg;
+			
+			LCD.clear(7);
+			if(Double.toString(leftAvg).length() >= 4 && Double.toString(rightAvg).length() >= 4 && Double.toString(midAvg).length() >= 3) {
+			LCD.drawString("L:" + Double.toString(leftAvg).substring(1, 4) + "M:" + Double.toString(midAvg).substring(1, 3) + "R:" + Double.toString(rightAvg).substring(1, 4) ,4,7);
 			}
 			
 			LeftSamples = new ArrayList<Float>(ArraySize * 2);
 			RightSamples = new ArrayList<Float>(ArraySize);
+			MidSamples = new ArrayList<Float>(ArraySize);
 			return 0.4f;
 		}
 	}
