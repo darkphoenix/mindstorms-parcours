@@ -711,13 +711,9 @@ public enum ParcoursSegment {
 			ParcoursMain.leftMotor.resetTachoCount();
 			ParcoursMain.rightMotor.resetTachoCount();
 			
-			while((ParcoursMain.leftMotor.getTachoCount() - leftDelta) > 5) {
-				ParcoursMain.rightMotor.forward();
-				ParcoursMain.leftMotor.backward();
-			} 
-
-			ParcoursMain.rightMotor.stop(true);
-			ParcoursMain.leftMotor.stop();
+//			correctCourseTacho();
+//			correctCourseWhite();
+			correctNaive();
 			
 			
 			LCD.clear();
@@ -759,6 +755,41 @@ public enum ParcoursSegment {
 			Delay.msDelay(50);
 		}
 		
+		
+		private void correctNaive() {
+			ParcoursMain.rightMotor.rotate(-440, true);
+			ParcoursMain.leftMotor.rotate(440, false);
+		}
+		
+		private void correctCourseTacho() {
+			while((ParcoursMain.leftMotor.getTachoCount() - leftDelta) > 5) {
+				ParcoursMain.rightMotor.forward();
+				ParcoursMain.leftMotor.backward();
+			} 
+
+			ParcoursMain.rightMotor.stop(true);
+			ParcoursMain.leftMotor.stop();
+			
+		}
+		
+		private void correctCourseWhite() {
+			while(true) {
+				
+				LCD.drawString("White? :   " + isBlueLine() + "!", 2,6 );
+				ParcoursMain.rightMotor.forward();
+				ParcoursMain.leftMotor.forward();
+				
+				if(isBlueLine()) {
+					ParcoursMain.rightMotor.stop(true);
+					ParcoursMain.leftMotor.stop();
+					readBlue();
+					double diff = getDirectionDiff();
+					LCD.drawString("D: " + diff, 2, 7);
+					allignBlue(diff);
+					break;
+				}	
+			}
+		}
 		
 		public float[] getRGBValue() {
 			float res[] = new float[3];
