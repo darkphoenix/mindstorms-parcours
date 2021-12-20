@@ -661,7 +661,7 @@ public enum ParcoursSegment {
 //				ParcoursMain.rightMotor.rotate(600, false);
 				
 				color.close();
-				ParcoursMain.moveTo(BRIDGE);
+				ParcoursMain.moveTo(FIND_BRIDGE);
 			}
 		}
 		
@@ -673,7 +673,7 @@ public enum ParcoursSegment {
 			return res[0];
 		}	
 	},
-	BRIDGE("Bridge") {
+	FIND_BRIDGE("Find Bridge") {
 		private Port colorPort;
 		private EV3ColorSensor color;
 		private RegulatedMotor sensorMover;
@@ -695,7 +695,8 @@ public enum ParcoursSegment {
 		
 		private boolean blueFound = false;
 		
-		private final float coloreps = 0.08f;
+		private final float redeps = 0.05f;
+		private final float blueeps = 0.08f;
 		
 		public void init() {
 			colorPort = ParcoursMain.brick.getPort("S1");
@@ -713,9 +714,12 @@ public enum ParcoursSegment {
 			ParcoursMain.leftMotor.resetTachoCount();
 			ParcoursMain.rightMotor.resetTachoCount();
 			
-			ParcoursMain.rightMotor.setSpeed(300);
-			ParcoursMain.leftMotor.setSpeed(300);
+			ParcoursMain.rightMotor.setSpeed(200);
+			ParcoursMain.leftMotor.setSpeed(200);
 
+			ParcoursMain.leftMotor.rotate(300, true);
+			ParcoursMain.rightMotor.rotate(300, false);
+			
 			LCD.clear();
 			
 //			correctCourseTacho();
@@ -723,23 +727,25 @@ public enum ParcoursSegment {
 //			correctCourseWhite();
 			correctDistance();
 			
-			ParcoursMain.leftMotor.rotate(600, true);
-			ParcoursMain.rightMotor.rotate(600, false);
-			
+			ParcoursMain.rightMotor.setSpeed(500);
+			ParcoursMain.leftMotor.setSpeed(500);
 		
 		}
 		public void doStep() {
 			float[] rgb = getRGBValue();
-			
+			float red = rgb[0];
+			float green = rgb[1];
+			float blue = rgb[2];
+					
 //			LCD.drawString("R_Delta: " + rightDelta, 2, 1);
 //			LCD.drawString("L_Delta: " + leftDelta, 2, 2);
 //			LCD.drawString("R_Tacho: " + ParcoursMain.rightMotor.getTachoCount(), 2, 3);
 //			LCD.drawString("L_Tacho: " + ParcoursMain.leftMotor.getTachoCount(), 2, 4);
 			
 			
-			LCD.drawString("red: " + rgb[0], 2, 3);
-			LCD.drawString("green: " + rgb[1], 2, 4);
-			LCD.drawString("blue: " + rgb[2], 2, 5);
+			LCD.drawString("red: " + red, 2, 3);
+			LCD.drawString("green: " + green, 2, 4);
+			LCD.drawString("blue: " + blue, 2, 5);
 //			
 //			LCD.drawString("color:   " + getColor(), 2,6 );
 			
@@ -762,8 +768,8 @@ public enum ParcoursSegment {
 				}	
 			}
 			
-			
 			Delay.msDelay(50);
+			
 		}
 		
 		
@@ -803,8 +809,8 @@ public enum ParcoursSegment {
 			
 			Sound.beep();
 			
-			ParcoursMain.leftMotor.rotate(100, true);
-			ParcoursMain.rightMotor.rotate(-100, false);
+//			ParcoursMain.leftMotor.rotate(100, true);
+//			ParcoursMain.rightMotor.rotate(-100, false);
 			
 			ParcoursMain.rightMotor.stop(true);
 			ParcoursMain.leftMotor.stop();
@@ -876,13 +882,13 @@ public enum ParcoursSegment {
 			float green = rgb[1];
 			float blue = rgb[2];
 			
-			if (red > coloreps && green <= coloreps && blue <= coloreps) {
+			if (red > redeps && green <= blueeps && blue <= blueeps) {
 				//red
 				return 0;
-			} else if (red <= coloreps && green > coloreps && blue <= coloreps) {
+			} else if (red <= redeps && green > blueeps && blue <= blueeps) {
 				//green
 				return 1;
-			} else if (red <= coloreps && green <= coloreps && blue > coloreps) {
+			} else if (red <= redeps && green <= blueeps && blue > blueeps) {
 				//blue
 				return 2;				
 			}
@@ -911,9 +917,9 @@ public enum ParcoursSegment {
 			float green = rgb[1];
 			float blue = rgb[2];
 			
-			if (red > coloreps) {
+			if (red > redeps) {
 				return false;
-			} else if (red <= coloreps && (green > coloreps || blue > coloreps)) {
+			} else if (red <= redeps && (green > blueeps || blue > blueeps)) {
 				//green
 				return true;			
 			}
