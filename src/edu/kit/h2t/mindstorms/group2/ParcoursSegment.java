@@ -657,8 +657,8 @@ public enum ParcoursSegment {
 				ParcoursMain.leftMotor.stop();
 				
 				//Back off
-				ParcoursMain.leftMotor.rotate(600, true);
-				ParcoursMain.rightMotor.rotate(600, false);
+//				ParcoursMain.leftMotor.rotate(600, true);
+//				ParcoursMain.rightMotor.rotate(600, false);
 				
 				color.close();
 				ParcoursMain.moveTo(BRIDGE);
@@ -695,7 +695,7 @@ public enum ParcoursSegment {
 		
 		private boolean blueFound = false;
 		
-		private final float coloreps = 0.05f;
+		private final float coloreps = 0.08f;
 		
 		public void init() {
 			colorPort = ParcoursMain.brick.getPort("S1");
@@ -723,21 +723,23 @@ public enum ParcoursSegment {
 //			correctCourseWhite();
 			correctDistance();
 			
+			ParcoursMain.leftMotor.rotate(600, true);
+			ParcoursMain.rightMotor.rotate(600, false);
 			
 		
 		}
 		public void doStep() {
 			float[] rgb = getRGBValue();
 			
-			LCD.drawString("R_Delta: " + rightDelta, 2, 1);
-			LCD.drawString("L_Delta: " + leftDelta, 2, 2);
-			LCD.drawString("R_Tacho: " + ParcoursMain.rightMotor.getTachoCount(), 2, 3);
-			LCD.drawString("L_Tacho: " + ParcoursMain.leftMotor.getTachoCount(), 2, 4);
+//			LCD.drawString("R_Delta: " + rightDelta, 2, 1);
+//			LCD.drawString("L_Delta: " + leftDelta, 2, 2);
+//			LCD.drawString("R_Tacho: " + ParcoursMain.rightMotor.getTachoCount(), 2, 3);
+//			LCD.drawString("L_Tacho: " + ParcoursMain.leftMotor.getTachoCount(), 2, 4);
 			
 			
-//			LCD.drawString("red: " + rgb[0], 2, 3);
-//			LCD.drawString("green: " + rgb[1], 2, 4);
-//			LCD.drawString("blue: " + rgb[2], 2, 5);
+			LCD.drawString("red: " + rgb[0], 2, 3);
+			LCD.drawString("green: " + rgb[1], 2, 4);
+			LCD.drawString("blue: " + rgb[2], 2, 5);
 //			
 //			LCD.drawString("color:   " + getColor(), 2,6 );
 			
@@ -801,6 +803,9 @@ public enum ParcoursSegment {
 			
 			Sound.beep();
 			
+			ParcoursMain.leftMotor.rotate(100, true);
+			ParcoursMain.rightMotor.rotate(-100, false);
+			
 			ParcoursMain.rightMotor.stop(true);
 			ParcoursMain.leftMotor.stop();
 		}
@@ -851,7 +856,7 @@ public enum ParcoursSegment {
 		
 		/*  Diff = leftAvg - rightAvg
 		 * 	Left means positive diff
-			Right means negative diff
+		 *	Right means negative diff
 		*/
 		public void allignBlue(double diff) {
 			int baseRotate = 360;
