@@ -712,8 +712,10 @@ public enum ParcoursSegment {
 			ParcoursMain.rightMotor.resetTachoCount();
 			
 //			correctCourseTacho();
+//			correctNaive();
 //			correctCourseWhite();
-			correctNaive();
+			correctDistance();
+			
 			
 			
 			LCD.clear();
@@ -757,8 +759,8 @@ public enum ParcoursSegment {
 		
 		
 		private void correctNaive() {
-			ParcoursMain.rightMotor.rotate(-440, true);
-			ParcoursMain.leftMotor.rotate(440, false);
+			ParcoursMain.rightMotor.rotate(250, true);
+			ParcoursMain.leftMotor.rotate(-250, false);
 		}
 		
 		private void correctCourseTacho() {
@@ -770,6 +772,22 @@ public enum ParcoursSegment {
 			ParcoursMain.rightMotor.stop(true);
 			ParcoursMain.leftMotor.stop();
 			
+		}
+		
+		private void correctDistance() {
+			while(ParcoursMain.getDistance() < 1) {
+				//Turn left
+				ParcoursMain.rightMotor.forward();
+				ParcoursMain.leftMotor.backward();
+			}
+			while(ParcoursMain.getDistance() > 0.7) {
+				//Turn left
+				ParcoursMain.rightMotor.forward();
+				ParcoursMain.leftMotor.backward();
+			}
+			
+			ParcoursMain.rightMotor.stop(true);
+			ParcoursMain.leftMotor.stop();
 		}
 		
 		private void correctCourseWhite() {
