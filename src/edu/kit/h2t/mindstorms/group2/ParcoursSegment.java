@@ -1029,10 +1029,13 @@ public enum ParcoursSegment {
 			
 			switch(state) {
 			
+			//Get to Bridge
 			case 0:
 				getToBridge();
 				state++;
 				break;
+			
+			//Drive up	
 			case 1:
 				syncForward();
 				if(getAngle() < 5) {
@@ -1040,8 +1043,12 @@ public enum ParcoursSegment {
 					Sound.beep();
 				}
 				break;
+			
+			//Correction	
 			case 2:	
 				if(isVoid()) {
+					syncStop();
+					
 					//Backoff
 					ParcoursMain.rightMotor.rotate(-100, true);
 					ParcoursMain.leftMotor.rotate(-100, false);
@@ -1049,12 +1056,15 @@ public enum ParcoursSegment {
 					//Turn left
 					ParcoursMain.rightMotor.rotate(600, true);
 					ParcoursMain.leftMotor.rotate(-600, false);
+				} else {
+					syncForward();
 				}
 				if(getAngle() < -5) {
 					state++;
 					Sound.beep();
 				}
 				break;
+			//Drive down	
 			case 3:
 				state++;
 				break;
