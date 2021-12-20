@@ -262,6 +262,7 @@ public enum ParcoursSegment {
 				ParcoursMain.rightMotor.rotate(450, true);
 				ParcoursMain.leftMotor.rotate(-450, false);
 				color.close();
+				sensorMover.close();
 				ParcoursMain.moveTo(MAILMAN);
 			} else if (getRedValue() > blackEps) {
 				//LCD.drawString("regulated",4,6);
@@ -658,7 +659,6 @@ public enum ParcoursSegment {
 				ParcoursMain.rightMotor.rotate(600, false);
 				
 				color.close();
-				sensorMover.close();
 				ParcoursMain.moveTo(BRIDGE);
 			}
 		}
