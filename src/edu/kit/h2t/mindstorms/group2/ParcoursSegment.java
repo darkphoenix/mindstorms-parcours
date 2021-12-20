@@ -693,8 +693,6 @@ public enum ParcoursSegment {
 		private int leftDelta;
 		private int rightDelta;
 		
-		private boolean blueFound = false;
-		
 		private final float redeps = 0.05f;
 		private final float blueeps = 0.08f;
 		
@@ -750,23 +748,23 @@ public enum ParcoursSegment {
 //			LCD.drawString("color:   " + getColor(), 2,6 );
 			
 			
-			while(!blueFound) {
 				
-				LCD.drawString("Blue? :   " + isBlueLine() + "!", 2,6 );
-				ParcoursMain.rightMotor.forward();
-				ParcoursMain.leftMotor.forward();
-				
-				if(isBlueLine()) {
-					blueFound = true;
-					ParcoursMain.rightMotor.stop(true);
-					ParcoursMain.leftMotor.stop();
-					readBlue();
-					double diff = getDirectionDiff();
-					LCD.drawString("D: " + diff, 2, 7);
-					allignBlue(diff);
-					break;
-				}	
-			}
+			LCD.drawString("Blue? :   " + isBlueLine() + "!", 2,6 );
+			ParcoursMain.rightMotor.forward();
+			ParcoursMain.leftMotor.forward();
+			
+			if(isBlueLine()) {
+				ParcoursMain.rightMotor.stop(true);
+				ParcoursMain.leftMotor.stop();
+				readBlue();
+				double diff = getDirectionDiff();
+				LCD.drawString("D: " + diff, 2, 7);
+				allignBlue(diff);
+				color.close();
+				sensorMover.close();
+				ParcoursMain.moveTo(BRIDGE);
+			}	
+		
 			
 			Delay.msDelay(50);
 			
@@ -977,8 +975,77 @@ public enum ParcoursSegment {
 			  }
 			  return sum;
 			}
-	};
+	},
+	
+	BRIDGE("Bridge") {
 
+		private Port colorPort;
+		private EV3ColorSensor color;
+		private RegulatedMotor sensorMover;
+		private SensorMode redMode;
+		
+		private final int sensorStopL = 75;
+		private final int sensorStopR = 90;
+		
+		private final double diffEps = 0.1;
+		private final double sumBlueEps = 0.3;
+		
+		private final int ArraySize = 100;
+		
+		private ArrayList<Float> LeftSamples;
+		private ArrayList<Float> RightSamples;
+		
+		public void init() {
+			LCD.clear();
+			colorPort = ParcoursMain.brick.getPort("S1");
+			color = new EV3ColorSensor(colorPort);
+			redMode = color.getRedMode();
+			
+			LeftSamples = new ArrayList<Float>(ArraySize * 2);
+			RightSamples = new ArrayList<Float>(ArraySize);
+			
+			sensorMover = new EV3MediumRegulatedMotor(MotorPort.D);
+			sensorMover.rotateTo(sensorStopL);
+
+		}
+
+		public void doStep() {
+			LCD.drawString("Value: " + getRedValue(), 2, 3);
+			LCD.drawString("Void: " + isVoid(), 2, 4);
+			Delay.msDelay(50);
+			
+			while(!isVoid()) {
+				syncForward();
+			}
+			
+			
+		}
+		
+		public void syncForward() {
+			ParcoursMain.leftMotor.forward();
+			ParcoursMain.rightMotor.forward();
+			
+		}
+		
+		public boolean isVoid() {
+			return getRedValue() < 0.025;
+		}
+		
+		public float getRedValue() {
+			float res[] = new float[1];
+			
+			redMode.fetchSample(res, 0);
+			
+			return res[0];
+		}	
+		
+		
+	}
+	
+	;
+
+	
+	
 	public String name;
 	ParcoursSegment(String name) {
 		this.name = name;
