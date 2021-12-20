@@ -12,10 +12,12 @@ import lejos.hardware.motor.EV3MediumRegulatedMotor;
 import lejos.hardware.port.MotorPort;
 import lejos.hardware.port.Port;
 import lejos.hardware.sensor.EV3ColorSensor;
+import lejos.hardware.sensor.EV3GyroSensor;
 import lejos.hardware.sensor.EV3TouchSensor;
 import lejos.hardware.sensor.EV3UltrasonicSensor;
 import lejos.hardware.sensor.SensorMode;
 import lejos.robotics.RegulatedMotor;
+import lejos.robotics.SampleProvider;
 
 public enum ParcoursSegment {
 	/*LINEFOLLOW("Follow line") {
@@ -983,6 +985,11 @@ public enum ParcoursSegment {
 		private EV3ColorSensor color;
 		private RegulatedMotor sensorMover;
 		private SensorMode redMode;
+		private SampleProvider angleMode;
+		private Port gyroPort;
+		private EV3GyroSensor gyro;
+		
+		private int state = 0;
 		
 		private final int sensorStopL = 75;
 		private final int sensorStopR = 90;
@@ -1000,35 +1007,95 @@ public enum ParcoursSegment {
 			colorPort = ParcoursMain.brick.getPort("S1");
 			color = new EV3ColorSensor(colorPort);
 			redMode = color.getRedMode();
+			gyroPort = ParcoursMain.brick.getPort("S4");
+			gyro = new EV3GyroSensor(gyroPort);
+			angleMode = gyro.getAngleMode();
 			
 			LeftSamples = new ArrayList<Float>(ArraySize * 2);
 			RightSamples = new ArrayList<Float>(ArraySize);
 			
 			sensorMover = new EV3MediumRegulatedMotor(MotorPort.D);
-			sensorMover.rotateTo(sensorStopL);
-
+//			sensorMover.rotateTo(sensorStopL);
+			gyro.reset();
+			Sound.beep();
+			
 		}
 
 		public void doStep() {
 			LCD.drawString("Value: " + getRedValue(), 2, 3);
 			LCD.drawString("Void: " + isVoid(), 2, 4);
-			Delay.msDelay(50);
+			LCD.drawString("Angle: " + getAngle(), 2, 5);
 			
-			while(!isVoid()) {
-				syncForward();
+			switch(state) {
+			
+			case 0:
+				getToBridge();
+				state++;
+				break;
+			case 1:
+				state++;
+				break;
+			case 2:	
+				state++;
+				break;
+			case 3:
+				state++;
+				break;
+			default:
+				break;
+			
 			}
-			
+//			
+//			//Drive up 
+//			if (getAngle() > 5) {
+//				syncForward();
+//			} 
+//			//Drive down
+//			else if (getAngle() < -5 ) {
+//				sensorMover.rotateTo(-sensorStopR);
+//				syncForward();
+//			} 
+//			else if(isVoid()) {
+//				//Backoff
+//				ParcoursMain.rightMotor.rotate(-100, true);
+//				ParcoursMain.leftMotor.rotate(-100, false);
+//				
+//				//Turn left
+//				ParcoursMain.rightMotor.rotate(600, true);
+//				ParcoursMain.leftMotor.rotate(-600, false);
+//			}
+//			else {
+//				syncStop();
+//			}
 			
 		}
 		
 		public void syncForward() {
 			ParcoursMain.leftMotor.forward();
 			ParcoursMain.rightMotor.forward();
+		}
+		
+		public void syncStop() {
+			ParcoursMain.leftMotor.stop(true);
+			ParcoursMain.rightMotor.stop();
 			
 		}
 		
+		public void getToBridge() {
+			while(getAngle() < 5) {
+				syncForward();
+			}
+		}
+		
+		public float getAngle() {
+			float res[] = new float[1];
+			angleMode.fetchSample(res, 0);
+			
+			return res[0];
+		}
+		
 		public boolean isVoid() {
-			return getRedValue() < 0.025;
+			return getRedValue() < 0.02;
 		}
 		
 		public float getRedValue() {
