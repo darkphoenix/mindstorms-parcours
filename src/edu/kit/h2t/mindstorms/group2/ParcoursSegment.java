@@ -5,6 +5,7 @@ import lejos.utility.Delay;
 import java.util.ArrayList;
 
 import lejos.ev3.tools.LCDDisplay;
+import lejos.hardware.Sound;
 import lejos.hardware.lcd.LCD;
 import lejos.hardware.motor.BaseRegulatedMotor;
 import lejos.hardware.motor.EV3MediumRegulatedMotor;
@@ -477,11 +478,12 @@ public enum ParcoursSegment {
 		}
 	}
 	,
-	AVOIDCOLLISION("Avoid") {
+	SOUND("Beep") {
 		public void init() {
-		
+			Sound.playTone(Sound.BEEP, 1000, 100);
 		}
 		public void doStep() {
+			
 		}
 	},
 	/*COUNT("Count") {
@@ -711,14 +713,18 @@ public enum ParcoursSegment {
 			ParcoursMain.leftMotor.resetTachoCount();
 			ParcoursMain.rightMotor.resetTachoCount();
 			
+			ParcoursMain.rightMotor.setSpeed(300);
+			ParcoursMain.leftMotor.setSpeed(300);
+
+			LCD.clear();
+			
 //			correctCourseTacho();
 //			correctNaive();
 //			correctCourseWhite();
 			correctDistance();
 			
 			
-			
-			LCD.clear();
+		
 		}
 		public void doStep() {
 			float[] rgb = getRGBValue();
@@ -734,6 +740,7 @@ public enum ParcoursSegment {
 //			LCD.drawString("blue: " + rgb[2], 2, 5);
 //			
 //			LCD.drawString("color:   " + getColor(), 2,6 );
+			
 			
 			while(!blueFound) {
 				
@@ -775,16 +782,24 @@ public enum ParcoursSegment {
 		}
 		
 		private void correctDistance() {
-			while(ParcoursMain.getDistance() < 1) {
+			LCD.clear();
+			while(ParcoursMain.getDistance() < 0.9) {
 				//Turn left
 				ParcoursMain.rightMotor.forward();
 				ParcoursMain.leftMotor.backward();
+				
 			}
-			while(ParcoursMain.getDistance() > 0.7) {
+			LCD.drawString("D1: " + ParcoursMain.getDistance(), 2, 6);
+			Sound.beep();
+			
+			while(ParcoursMain.getDistance() > 0.8) {
 				//Turn left
 				ParcoursMain.rightMotor.forward();
 				ParcoursMain.leftMotor.backward();
+				LCD.drawString("D2: " + ParcoursMain.getDistance(), 2, 7);
 			}
+			
+			Sound.beep();
 			
 			ParcoursMain.rightMotor.stop(true);
 			ParcoursMain.leftMotor.stop();
