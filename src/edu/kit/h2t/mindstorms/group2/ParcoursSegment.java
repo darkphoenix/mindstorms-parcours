@@ -1017,7 +1017,7 @@ public enum ParcoursSegment {
 			sensorMover = new EV3MediumRegulatedMotor(MotorPort.D);
 //			sensorMover.rotateTo(sensorStopL);
 			gyro.reset();
-			Sound.beep();
+			Sound.buzz();
 			
 		}
 
@@ -1025,6 +1025,7 @@ public enum ParcoursSegment {
 			LCD.drawString("Value: " + getRedValue(), 2, 3);
 			LCD.drawString("Void: " + isVoid(), 2, 4);
 			LCD.drawString("Angle: " + getAngle(), 2, 5);
+			LCD.drawString("State: " + state, 2, 6);
 			
 			switch(state) {
 			
@@ -1033,15 +1034,32 @@ public enum ParcoursSegment {
 				state++;
 				break;
 			case 1:
-				state++;
+				syncForward();
+				if(getAngle() < 5) {
+					state++;
+					Sound.beep();
+				}
 				break;
 			case 2:	
-				state++;
+				if(isVoid()) {
+					//Backoff
+					ParcoursMain.rightMotor.rotate(-100, true);
+					ParcoursMain.leftMotor.rotate(-100, false);
+					
+					//Turn left
+					ParcoursMain.rightMotor.rotate(600, true);
+					ParcoursMain.leftMotor.rotate(-600, false);
+				}
+				if(getAngle() < -5) {
+					state++;
+					Sound.beep();
+				}
 				break;
 			case 3:
 				state++;
 				break;
 			default:
+				syncStop();
 				break;
 			
 			}
