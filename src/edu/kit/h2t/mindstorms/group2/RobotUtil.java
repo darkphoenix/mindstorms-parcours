@@ -8,10 +8,12 @@ import lejos.hardware.motor.EV3MediumRegulatedMotor;
 import lejos.hardware.port.MotorPort;
 import lejos.hardware.port.Port;
 import lejos.hardware.sensor.EV3ColorSensor;
+import lejos.hardware.sensor.EV3GyroSensor;
 import lejos.hardware.sensor.EV3TouchSensor;
 import lejos.hardware.sensor.EV3UltrasonicSensor;
 import lejos.hardware.sensor.SensorMode;
 import lejos.robotics.RegulatedMotor;
+import lejos.robotics.SampleProvider;
 
 public class RobotUtil {
 	private static boolean isRGB = false;
@@ -26,7 +28,10 @@ public class RobotUtil {
 	private static Port touchPort;
 	private static EV3TouchSensor touch;
 	private static SensorMode touchMode;
-	
+
+	private static SampleProvider angleMode;
+	private static Port gyroPort;
+	private static EV3GyroSensor gyro;
 
 	public static EV3 brick;
 	public static TextLCD lcd;
@@ -45,9 +50,15 @@ public class RobotUtil {
 		useRed();
 		
 		//init touch
-		touchPort = RobotUtil.brick.getPort("S2");
+		touchPort = brick.getPort("S2");
 		touch = new EV3TouchSensor(touchPort);
 		touchMode = touch.getTouchMode();
+		
+		//init gyro
+		gyroPort = brick.getPort("S4");
+		gyro = new EV3GyroSensor(gyroPort);
+		angleMode = gyro.getAngleMode();
+		gyro.reset();
 		
 		//init ultrasonic
 		boolean initialised = false;
@@ -104,7 +115,13 @@ public class RobotUtil {
 		touchMode.fetchSample(res, 0);
 		
 		return res[0] == 1.0f;
-	}	
+	}
+	
+	public static float getAngle() {
+		float angle[] = new float[1];
+		angleMode.fetchSample(angle, 0);
+		return angle[0];
+	}
 	
 	public static void syncForward() {
 		leftMotor.resetTachoCount();

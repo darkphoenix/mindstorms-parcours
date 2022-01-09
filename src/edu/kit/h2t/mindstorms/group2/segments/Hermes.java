@@ -5,7 +5,7 @@ import edu.kit.h2t.mindstorms.group2.RobotUtil;
 import lejos.hardware.lcd.LCD;
 import lejos.utility.Delay;
 
-public class Mailman extends ParcoursSegment {
+public class Hermes extends ParcoursSegment {
 
 	private int leftTacho;
 	private int rightTacho;

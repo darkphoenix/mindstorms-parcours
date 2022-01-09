@@ -19,7 +19,7 @@ public class ParcoursMain {
 
 		segments = new HashMap<String, ParcoursSegment>();
 		segments.put(KoopLineFollow.class.getName(), new KoopLineFollow());
-		segments.put(Mailman.class.getName(), new Mailman());
+		segments.put(Hermes.class.getName(), new Hermes());
 		segments.put(Bridge.class.getName(), new Bridge());
 		
 		String names[] = (String[]) segments.keySet().toArray();

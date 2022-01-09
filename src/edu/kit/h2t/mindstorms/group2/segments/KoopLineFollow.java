@@ -67,7 +67,7 @@ public class KoopLineFollow extends ParcoursSegment {
 			//Turn left
 			RobotUtil.rightMotor.rotate(450, true);
 			RobotUtil.leftMotor.rotate(-450, false);
-			ParcoursMain.moveTo("Mailman");
+			ParcoursMain.moveTo("Hermes");
 		} else if (RobotUtil.getRed() > blackEps) {
 			//LCD.drawString("regulated",4,6);
 			regulatedLineTask();
