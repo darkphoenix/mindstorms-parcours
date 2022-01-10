@@ -79,7 +79,7 @@ public class Hermes extends ParcoursSegment {
 			RobotUtil.leftMotor.rotate(600, true);
 			RobotUtil.rightMotor.rotate(600, false);
 			
-			ParcoursMain.moveTo("Bridge");
+			ParcoursMain.moveTo("FindBridge");
 		}
 	}
 	

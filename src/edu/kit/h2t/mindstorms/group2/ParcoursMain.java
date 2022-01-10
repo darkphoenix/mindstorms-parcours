@@ -16,7 +16,9 @@ public class ParcoursMain {
 	public static int HERMES_RIGHT_DELTA;
 	
 	public static void main(String[] args) {
+		RobotUtil.init();
 
+		//Import modules
 		segments = new HashMap<String, ParcoursSegment>();
 		segments.put(KoopLineFollow.class.getSimpleName(), new KoopLineFollow());
 		segments.put(Hermes.class.getSimpleName(), new Hermes());
@@ -35,7 +37,6 @@ public class ParcoursMain {
 	}
 	
 	public static void moveTo(String segNew) {
-		System.out.println(segNew);
 		seg = segments.get(segNew);
 		RobotUtil.lcd.clear();
 		RobotUtil.lcd.drawString(segNew, 1, 1);

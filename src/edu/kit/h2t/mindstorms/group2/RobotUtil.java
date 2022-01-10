@@ -16,7 +16,7 @@ import lejos.robotics.RegulatedMotor;
 import lejos.robotics.SampleProvider;
 
 public class RobotUtil {
-	private static boolean isRGB = false;
+	private static boolean isRGB = true;
 	private static Port colourPort;
 	private static EV3ColorSensor colourSensor;
 	private static SensorMode colourMode;
