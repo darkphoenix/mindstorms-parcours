@@ -140,6 +140,25 @@ public class RobotUtil {
 		
 	}
 	
+	public static void syncForwardCorrectionTask() {
+		int rightTacho =  rightMotor.getTachoCount();
+		int leftTacho =  leftMotor.getTachoCount();
+		
+		int TachoDiff = rightTacho - leftTacho;
+		
+		
+		if (TachoDiff > 50) {
+			syncStop();
+			leftMotor.rotate(TachoDiff);
+		} else if (TachoDiff < -50) {
+			syncStop();
+			rightMotor.rotate(-TachoDiff);
+		}
+		
+		leftMotor.forward();
+		rightMotor.forward();
+	}
+	
 	public static void setMotorSpeed(int speed) {
 		leftMotor.setSpeed(speed);
 		rightMotor.setSpeed(speed);
