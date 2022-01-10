@@ -62,11 +62,17 @@ public class RobotUtil {
 		
 		//init gyro
 		lcd.drawString("Gyro ", 2, 3);
-		gyroPort = brick.getPort("S4");
-		gyro = new EV3GyroSensor(gyroPort);
-		angleMode = gyro.getAngleMode();
-		gyro.reset();
+		boolean initialisedGyro = false;
+		while (!initialisedGyro)
+			try {
+				gyroPort = brick.getPort("S4");
+				gyro = new EV3GyroSensor(gyroPort);
+				angleMode = gyro.getAngleMode();
+				gyro.reset();
+				initialisedGyro = true;
+			} catch (Exception e) {}
 		
+
 		//init ultrasonic
 		lcd.drawString("Ultrasonic", 2, 3);
 		boolean initialised = false;
