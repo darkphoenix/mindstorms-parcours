@@ -68,7 +68,6 @@ public class Hermes extends ParcoursSegment {
 						break;
 					}
 				} else {
-					break;
 				}
 			}
 

@@ -44,6 +44,8 @@ public class RobotUtil {
 		brick = (EV3) BrickFinder.getLocal();
 		lcd = brick.getTextLCD();
 		
+		lcd.drawString("Initializing...", 2, 2);
+		
 		//init colour
 		colourPort = brick.getPort("S1");
 		colourSensor = new EV3ColorSensor(colourPort);
@@ -74,6 +76,8 @@ public class RobotUtil {
 		leftMotor = new EV3LargeRegulatedMotor(MotorPort.B);
 		rightMotor = new EV3LargeRegulatedMotor(MotorPort.A);
 		sensorMover = new EV3MediumRegulatedMotor(MotorPort.D);
+		
+		lcd.clear();
 	}
 	
 	private static void useRed() {
