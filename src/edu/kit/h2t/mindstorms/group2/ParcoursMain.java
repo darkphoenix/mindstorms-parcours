@@ -21,6 +21,7 @@ public class ParcoursMain {
 		segments.put(Hermes.class.getSimpleName(), new Hermes());
 		segments.put(FindBridge.class.getSimpleName(), new FindBridge());
 		segments.put(Bridge.class.getSimpleName(), new Bridge());
+		segments.put("Bridge 2", new Bridge(2));
 		
 		String names[] = segments.keySet().toArray(new String[segments.size()]);
 		
