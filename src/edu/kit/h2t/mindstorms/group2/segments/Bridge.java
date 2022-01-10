@@ -2,11 +2,9 @@ package edu.kit.h2t.mindstorms.group2.segments;
 
 import java.util.ArrayList;
 
-import edu.kit.h2t.mindstorms.group2.ParcoursMain;
 import edu.kit.h2t.mindstorms.group2.RobotUtil;
 import lejos.hardware.Sound;
 import lejos.hardware.lcd.LCD;
-import lejos.utility.Delay;
 
 public class Bridge implements ParcoursSegment {
 	private int state = 0;
@@ -14,6 +12,11 @@ public class Bridge implements ParcoursSegment {
 	
 	private final int sensorStopL = 75;
 	private final int sensorStopR = 90;
+	
+	private final int baseRegulateSpeed = 250;
+	private final double offset = 0.02;
+	private final double p = 3000;
+	private final double p2 = 1000;
 	
 	private final double diffEps = 0.1;
 	private final double sumBlueEps = 0.3;
@@ -23,6 +26,14 @@ public class Bridge implements ParcoursSegment {
 	
 	private ArrayList<Float> LeftSamples;
 	private ArrayList<Float> RightSamples;
+	
+	public Bridge(int state) {
+		this.state = state;
+	}
+	
+	public Bridge() {
+		
+	}
 	
 	public void init() {
 		LCD.clear();
@@ -36,13 +47,16 @@ public class Bridge implements ParcoursSegment {
 	}
 
 	public void doStep() {
+		
+		LCD.drawString("Speed: " + RobotUtil.leftMotor.getSpeed(), 2, 2);
 		LCD.drawString("Value: " + RobotUtil.getRed(), 2, 3);
 		LCD.drawString("Void: " + isVoid(), 2, 4);
 		LCD.drawString("Angle: " + RobotUtil.getAngle(), 2, 5);
 		LCD.drawString("State: " + state, 2, 6);
 		
-		unregulatedStates();
 		
+//		unregulatedStates();
+		regulatedStates();
 		
 //		
 //		//Drive up 
@@ -69,6 +83,85 @@ public class Bridge implements ParcoursSegment {
 		
 	}
 	
+	private void regulatedStates() {
+		switch(state) {
+		
+		//Get to Bridge
+		case 0:
+			getToBridge();
+			state++;
+			break;
+		
+		//Drive up	
+		case 1:
+			RobotUtil.sensorMoverLeft();
+			regulatedDriveTask();
+			if(RobotUtil.getAngle() < 5) {
+				RobotUtil.setMotorSpeed(360);
+				RobotUtil.sensorMoverCenter();
+				while(!isVoid()) {
+					RobotUtil.syncForward();
+				}
+				
+				//Backoff
+				RobotUtil.rightMotor.rotate(-100, true);
+				RobotUtil.leftMotor.rotate(-100, false);
+				
+				//Turn left
+				RobotUtil.spin(-600);
+				
+				state++;
+				Sound.beep();
+			}
+			
+			if(isVoid()) {
+			}
+			break;
+		
+		//Correction	
+		case 2:	
+			
+			if(isVoid() && turns < 1) {
+				turns++;
+				RobotUtil.syncStop();
+				
+				//Backoff
+				RobotUtil.rightMotor.rotate(-100, true);
+				RobotUtil.leftMotor.rotate(-100, false);
+				
+				//Turn Right
+				RobotUtil.spin(600);
+				state++;
+				Sound.beep();
+				
+				while(RobotUtil.getAngle() <= 5) {
+					RobotUtil.syncBackward();
+				}
+				
+			} else {
+				RobotUtil.syncForward();
+			}
+			break;
+		//Drive down	
+		case 3:
+			RobotUtil.sensorMoverLeft();
+			
+			if(RobotUtil.getAngle() > 5) {
+				regulatedDriveTask(true);
+			} else {
+				RobotUtil.setMotorSpeed(360);
+				state++;
+				Sound.beep();
+			}
+			break;
+		default:
+			RobotUtil.setMotorSpeed(360);
+			RobotUtil.syncStop();
+			break;
+		}	
+		
+	}
+
 	private void unregulatedStates() {
 		switch(state) {
 		
@@ -76,6 +169,7 @@ public class Bridge implements ParcoursSegment {
 		case 0:
 			getToBridge();
 			state++;
+			Sound.beep();
 			break;
 		
 		//Drive up	
@@ -120,6 +214,7 @@ public class Bridge implements ParcoursSegment {
 			} else {
 				RobotUtil.setMotorSpeed(360);
 				state++;
+				Sound.beep();
 			}
 			
 				
@@ -130,6 +225,31 @@ public class Bridge implements ParcoursSegment {
 			break;
 		}	
 		
+	}
+	
+	private void regulatedDriveTask(boolean inverted) {
+		
+		if(!inverted) {
+			int y = (int) ((RobotUtil.getRed() - offset) * p);
+		
+			RobotUtil.leftMotor.setSpeed(baseRegulateSpeed - y);
+			RobotUtil.rightMotor.setSpeed(baseRegulateSpeed + y);
+		
+			RobotUtil.syncForward();
+		} 
+		else {
+			int y = (int) (-1 * (RobotUtil.getRed() - offset) * p2);
+			
+			RobotUtil.leftMotor.setSpeed(baseRegulateSpeed + y);
+			RobotUtil.rightMotor.setSpeed(baseRegulateSpeed - y);
+			
+			RobotUtil.syncBackward();
+		}
+		
+	}
+	
+	private void regulatedDriveTask() {
+		regulatedDriveTask(false);
 	}
 	
 	public void getToBridge() {
