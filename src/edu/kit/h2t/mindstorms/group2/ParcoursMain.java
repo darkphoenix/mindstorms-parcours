@@ -22,7 +22,7 @@ public class ParcoursMain {
 		segments.put(Hermes.class.getName(), new Hermes());
 		segments.put(Bridge.class.getName(), new Bridge());
 		
-		String names[] = (String[]) segments.keySet().toArray();
+		String names[] = segments.keySet().toArray(new String[segments.size()]);
 		
 		while(!Button.ESCAPE.isDown()) {
 			TextMenu segmentMenu = new TextMenu(names, 1, "Segment");
