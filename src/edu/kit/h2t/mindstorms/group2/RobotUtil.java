@@ -52,17 +52,20 @@ public class RobotUtil {
 		useRed();
 		
 		//init touch
+		lcd.drawString("Touch", 2, 3);
 		touchPort = brick.getPort("S2");
 		touch = new EV3TouchSensor(touchPort);
 		touchMode = touch.getTouchMode();
 		
 		//init gyro
+		lcd.drawString("Gyro ", 2, 3);
 		gyroPort = brick.getPort("S4");
 		gyro = new EV3GyroSensor(gyroPort);
 		angleMode = gyro.getAngleMode();
 		gyro.reset();
 		
 		//init ultrasonic
+		lcd.drawString("Ultrasonic", 2, 3);
 		boolean initialised = false;
 		while (!initialised)
 			try {
@@ -73,6 +76,7 @@ public class RobotUtil {
 			} catch (Exception e) {}
 		
 
+		lcd.drawString("Motors", 2, 3);
 		leftMotor = new EV3LargeRegulatedMotor(MotorPort.B);
 		rightMotor = new EV3LargeRegulatedMotor(MotorPort.A);
 		sensorMover = new EV3MediumRegulatedMotor(MotorPort.D);
