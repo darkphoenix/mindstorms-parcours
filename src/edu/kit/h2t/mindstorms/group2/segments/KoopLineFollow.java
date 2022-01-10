@@ -6,7 +6,7 @@ import edu.kit.h2t.mindstorms.group2.ParcoursMain;
 import edu.kit.h2t.mindstorms.group2.RobotUtil;
 import lejos.hardware.lcd.LCD;
 
-public class KoopLineFollow extends ParcoursSegment {
+public class KoopLineFollow implements ParcoursSegment {
 	private final double p = 1000;
 	private final double offset = 0.3;
 

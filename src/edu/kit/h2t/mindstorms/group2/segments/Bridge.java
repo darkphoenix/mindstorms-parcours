@@ -8,7 +8,7 @@ import lejos.hardware.Sound;
 import lejos.hardware.lcd.LCD;
 import lejos.utility.Delay;
 
-public class Bridge extends ParcoursSegment {
+public class Bridge implements ParcoursSegment {
 	private int state = 0;
 	private int turns = 0;
 	

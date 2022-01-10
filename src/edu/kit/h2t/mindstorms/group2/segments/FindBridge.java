@@ -7,7 +7,7 @@ import edu.kit.h2t.mindstorms.group2.RobotUtil;
 import lejos.hardware.Sound;
 import lejos.utility.Delay;
 
-public class FindBridge extends ParcoursSegment {
+public class FindBridge implements ParcoursSegment {
 	
 	private final int sensorStopL = 75;
 	private final int sensorStopR = 90;
