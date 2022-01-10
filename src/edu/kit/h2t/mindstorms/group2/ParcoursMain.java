@@ -18,9 +18,10 @@ public class ParcoursMain {
 	public static void main(String[] args) {
 
 		segments = new HashMap<String, ParcoursSegment>();
-		segments.put(KoopLineFollow.class.getName(), new KoopLineFollow());
-		segments.put(Hermes.class.getName(), new Hermes());
-		segments.put(Bridge.class.getName(), new Bridge());
+		segments.put(KoopLineFollow.class.getSimpleName(), new KoopLineFollow());
+		segments.put(Hermes.class.getSimpleName(), new Hermes());
+		segments.put(FindBridge.class.getSimpleName(), new FindBridge());
+		segments.put(Bridge.class.getSimpleName(), new Bridge());
 		
 		String names[] = segments.keySet().toArray(new String[segments.size()]);
 		
@@ -34,6 +35,7 @@ public class ParcoursMain {
 	}
 	
 	public static void moveTo(String segNew) {
+		System.out.println(segNew);
 		seg = segments.get(segNew);
 		RobotUtil.lcd.clear();
 		RobotUtil.lcd.drawString(segNew, 1, 1);
