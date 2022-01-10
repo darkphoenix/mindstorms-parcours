@@ -10,6 +10,7 @@ import lejos.utility.Delay;
 
 public class Bridge extends ParcoursSegment {
 	private int state = 0;
+	private int turns = 0;
 	
 	private final int sensorStopL = 75;
 	private final int sensorStopR = 90;
@@ -18,6 +19,7 @@ public class Bridge extends ParcoursSegment {
 	private final double sumBlueEps = 0.3;
 	
 	private final int ArraySize = 100;
+	
 	
 	private ArrayList<Float> LeftSamples;
 	private ArrayList<Float> RightSamples;
@@ -58,7 +60,8 @@ public class Bridge extends ParcoursSegment {
 		
 		//Correction	
 		case 2:	
-			if(isVoid()) {
+			
+			if(isVoid() && turns < 2) {
 				RobotUtil.syncStop();
 				
 				//Backoff
@@ -66,9 +69,11 @@ public class Bridge extends ParcoursSegment {
 				RobotUtil.leftMotor.rotate(-100, false);
 				
 				//Turn left
-				RobotUtil.rightMotor.rotate(600, true);
-				RobotUtil.leftMotor.rotate(-600, false);
-			} else {
+				RobotUtil.spin(-600);
+				
+				turns++;
+			} 
+			else {
 				RobotUtil.syncForward();
 			}
 			if(RobotUtil.getAngle() < -5) {
@@ -78,7 +83,11 @@ public class Bridge extends ParcoursSegment {
 			break;
 		//Drive down	
 		case 3:
-			state++;
+			if(RobotUtil.getAngle() < -5) {
+				RobotUtil.syncForward();
+			} else {
+				state++;
+			}
 			break;
 		default:
 			RobotUtil.syncStop();
