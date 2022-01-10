@@ -140,6 +140,11 @@ public class RobotUtil {
 		
 	}
 	
+	public static void setMotorSpeed(int speed) {
+		leftMotor.setSpeed(speed);
+		rightMotor.setSpeed(speed);
+	}
+	
 	public static void syncStop() {
 		rightMotor.stop(true);
 		leftMotor.stop();

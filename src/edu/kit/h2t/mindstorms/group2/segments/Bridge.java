@@ -52,7 +52,9 @@ public class Bridge implements ParcoursSegment {
 		//Drive up	
 		case 1:
 			RobotUtil.syncForward();
+			RobotUtil.setMotorSpeed(600);
 			if(RobotUtil.getAngle() < 5) {
+				RobotUtil.setMotorSpeed(360);
 				state++;
 				Sound.beep();
 			}
@@ -83,13 +85,16 @@ public class Bridge implements ParcoursSegment {
 			break;
 		//Drive down	
 		case 3:
+			RobotUtil.setMotorSpeed(600);
 			if(RobotUtil.getAngle() < -5) {
 				RobotUtil.syncForward();
 			} else {
+				RobotUtil.setMotorSpeed(360);
 				state++;
 			}
 			break;
 		default:
+			RobotUtil.setMotorSpeed(360);
 			RobotUtil.syncStop();
 			break;
 		
