@@ -36,9 +36,6 @@ public class Hermes implements ParcoursSegment {
 			RobotUtil.rightMotor.stop(true);
 			RobotUtil.leftMotor.stop();
 			
-			ParcoursMain.HERMES_LEFT_DELTA = (leftTacho - RobotUtil.leftMotor.getTachoCount());
-			ParcoursMain.HERMES_RIGHT_DELTA = (rightTacho - RobotUtil.rightMotor.getTachoCount());
-			
 			//Stop after finding box
 			Delay.msDelay(250);
 			

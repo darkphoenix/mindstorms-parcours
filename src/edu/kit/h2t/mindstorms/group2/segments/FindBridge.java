@@ -27,9 +27,6 @@ public class FindBridge implements ParcoursSegment {
 		LeftSamples = new ArrayList<Float>(ArraySize * 2);
 		RightSamples = new ArrayList<Float>(ArraySize);
 		
-		leftDelta = ParcoursMain.HERMES_LEFT_DELTA;
-		rightDelta = ParcoursMain.HERMES_RIGHT_DELTA;
-		
 		
 		RobotUtil.leftMotor.resetTachoCount();
 		RobotUtil.rightMotor.resetTachoCount();

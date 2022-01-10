@@ -12,9 +12,6 @@ public class ParcoursMain {
 	private static ParcoursSegment seg;
 	private static Map<String, ParcoursSegment> segments;
 	
-	public static int HERMES_LEFT_DELTA;
-	public static int HERMES_RIGHT_DELTA;
-	
 	public static void main(String[] args) {
 		RobotUtil.init();
 
