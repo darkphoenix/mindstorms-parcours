@@ -145,6 +145,15 @@ public class RobotUtil {
 		
 	}
 	
+	public static void syncBackward() {
+		leftMotor.resetTachoCount();
+		rightMotor.resetTachoCount();
+		
+		leftMotor.backward();
+		rightMotor.backward();
+		
+	}
+	
 	public static void syncForwardCorrectionTask() {
 		int rightTacho =  rightMotor.getTachoCount();
 		int leftTacho =  leftMotor.getTachoCount();
