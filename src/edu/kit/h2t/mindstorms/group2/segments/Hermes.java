@@ -11,8 +11,7 @@ public class Hermes implements ParcoursSegment {
 	private int rightTacho;
 	
 	public void init() {
-		RobotUtil.rightMotor.setSpeed(1000);
-		RobotUtil.leftMotor.setSpeed(1000);
+		RobotUtil.setMotorSpeed(1000);
 		RobotUtil.leftMotor.rotate(4800, true);
 		RobotUtil.rightMotor.rotate(4800, false);
 
@@ -50,8 +49,7 @@ public class Hermes implements ParcoursSegment {
 			RobotUtil.rightMotor.rotate(-1200, true);
 			RobotUtil.leftMotor.rotate(1200, false);
 			
-			RobotUtil.rightMotor.setSpeed(10000);
-			RobotUtil.leftMotor.setSpeed(10000);
+			RobotUtil.setMotorSpeed(10000);
 			RobotUtil.rightMotor.backward();
 			RobotUtil.leftMotor.backward();
 			

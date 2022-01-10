@@ -27,8 +27,7 @@ public class KoopLineFollow implements ParcoursSegment {
 	private ArrayList<Float> RightSamples;
 	
 	public void init() {
-		RobotUtil.leftMotor.setSpeed(baseSpeed);
-		RobotUtil.rightMotor.setSpeed(baseSpeed);
+		RobotUtil.setMotorSpeed(baseSpeed);
 		RobotUtil.sensorMover.setSpeed(600);
 		LeftSamples = new ArrayList<Float>(ArraySize * 2);
 		RightSamples = new ArrayList<Float>(ArraySize);
@@ -41,8 +40,7 @@ public class KoopLineFollow implements ParcoursSegment {
 		
 		if (RobotUtil.getDistance() < 0.05) {
 			RobotUtil.syncStop();
-			RobotUtil.leftMotor.setSpeed(baseSpeed);
-			RobotUtil.rightMotor.setSpeed(baseSpeed);
+			RobotUtil.setMotorSpeed(baseSpeed);
 			//Back off
 			RobotUtil.leftMotor.rotate(-400, true);
 			RobotUtil.rightMotor.rotate(-400, false);
@@ -96,9 +94,7 @@ public class KoopLineFollow implements ParcoursSegment {
 				
 				//Lücke
 				if (sensorDirection == 0){
-					RobotUtil.leftMotor.setSpeed(baseSpeed);
-				
-					RobotUtil.rightMotor.setSpeed(baseSpeed);
+					RobotUtil.setMotorSpeed(baseSpeed);
 					
 					RobotUtil.leftMotor.rotate(100, true);
 					RobotUtil.rightMotor.rotate(100, false);

@@ -38,9 +38,7 @@ public class FindBridge implements ParcoursSegment {
 		RobotUtil.leftMotor.resetTachoCount();
 		RobotUtil.rightMotor.resetTachoCount();
 		
-		RobotUtil.rightMotor.setSpeed(200);
-		RobotUtil.leftMotor.setSpeed(200);
-
+		RobotUtil.setMotorSpeed(200);
 		RobotUtil.leftMotor.rotate(300, true);
 		RobotUtil.rightMotor.rotate(300, false);
 		
@@ -51,8 +49,7 @@ public class FindBridge implements ParcoursSegment {
 //		correctCourseWhite();
 		correctDistance();
 		
-		RobotUtil.rightMotor.setSpeed(500);
-		RobotUtil.leftMotor.setSpeed(500);
+		RobotUtil.setMotorSpeed(500);
 	
 	}
 	public void doStep() {
