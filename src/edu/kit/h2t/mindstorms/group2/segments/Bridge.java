@@ -41,6 +41,35 @@ public class Bridge implements ParcoursSegment {
 		LCD.drawString("Angle: " + RobotUtil.getAngle(), 2, 5);
 		LCD.drawString("State: " + state, 2, 6);
 		
+		unregulatedStates();
+		
+		
+//		
+//		//Drive up 
+//		if (getAngle() > 5) {
+//			syncForward();
+//		} 
+//		//Drive down
+//		else if (getAngle() < -5 ) {
+//			sensorMover.rotateTo(-sensorStopR);
+//			syncForward();
+//		} 
+//		else if(isVoid()) {
+//			//Backoff
+//			ParcoursMain.rightMotor.rotate(-100, true);
+//			ParcoursMain.leftMotor.rotate(-100, false);
+//			
+//			//Turn left
+//			ParcoursMain.rightMotor.rotate(600, true);
+//			ParcoursMain.leftMotor.rotate(-600, false);
+//		}
+//		else {
+//			syncStop();
+//		}
+		
+	}
+	
+	private void unregulatedStates() {
 		switch(state) {
 		
 		//Get to Bridge
@@ -92,35 +121,14 @@ public class Bridge implements ParcoursSegment {
 				RobotUtil.setMotorSpeed(360);
 				state++;
 			}
+			
+				
 			break;
 		default:
 			RobotUtil.setMotorSpeed(360);
 			RobotUtil.syncStop();
 			break;
-		
-		}
-//		
-//		//Drive up 
-//		if (getAngle() > 5) {
-//			syncForward();
-//		} 
-//		//Drive down
-//		else if (getAngle() < -5 ) {
-//			sensorMover.rotateTo(-sensorStopR);
-//			syncForward();
-//		} 
-//		else if(isVoid()) {
-//			//Backoff
-//			ParcoursMain.rightMotor.rotate(-100, true);
-//			ParcoursMain.leftMotor.rotate(-100, false);
-//			
-//			//Turn left
-//			ParcoursMain.rightMotor.rotate(600, true);
-//			ParcoursMain.leftMotor.rotate(-600, false);
-//		}
-//		else {
-//			syncStop();
-//		}
+		}	
 		
 	}
 	
