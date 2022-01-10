@@ -8,10 +8,6 @@ import lejos.hardware.Sound;
 import lejos.utility.Delay;
 
 public class FindBridge implements ParcoursSegment {
-	
-	private final int sensorStopL = 75;
-	private final int sensorStopR = 90;
-	
 	private final double diffEps = 0.1;
 	private final double sumBlueEps = 0.3;
 	
@@ -155,19 +151,15 @@ public class FindBridge implements ParcoursSegment {
 	}
 	
 	public void readBlue() {
-		if(RobotUtil.sensorMover != null) {
-			RobotUtil.sensorMover.rotateTo(sensorStopL, true);
-			while(RobotUtil.sensorMover.getTachoCount() < sensorStopL) {
-				readSensorTask();
-			}
-			RobotUtil.sensorMover.rotateTo(-sensorStopR, true);
-			while(RobotUtil.sensorMover.getTachoCount() > -(sensorStopR)) {
-				readSensorTask();
-			}
-			RobotUtil.sensorMover.rotateTo(0);
-		} else {
-			System.out.println("NULL!");
+		RobotUtil.sensorMoverLeft();
+		while(!RobotUtil.isSensorMoverLeft()) {
+			readSensorTask();
 		}
+		RobotUtil.sensorMoverRight();
+		while(RobotUtil.isSensorMoverRight()) {
+			readSensorTask();
+		}
+		RobotUtil.sensorMoverCenter();
 	}
 		
 	
@@ -215,7 +207,7 @@ public class FindBridge implements ParcoursSegment {
 		if(isBlueLine()){
 			currentValue = 1;
 		}
-		if(RobotUtil.sensorMover.getTachoCount() > 0) {
+		if(RobotUtil.sensorMoverTacho() > 0) {
 			LeftSamples.add(currentValue);
 		} else {
 			RightSamples.add(currentValue);

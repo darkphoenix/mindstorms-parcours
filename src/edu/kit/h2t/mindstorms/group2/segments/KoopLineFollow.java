@@ -14,8 +14,6 @@ public class KoopLineFollow implements ParcoursSegment {
 	
 	private final int baseRegulateSpeed = 250;
 	private final int baseSpeed = 360;
-	private final int sensorStopL = 75;
-	private final int sensorStopR = 90;
 	private final float blackEps = 0.1f;
 	private double whiteEps = 0.4f;
 	private final double sumWhiteEps = 0.3;
@@ -28,7 +26,6 @@ public class KoopLineFollow implements ParcoursSegment {
 	
 	public void init() {
 		RobotUtil.setMotorSpeed(baseSpeed);
-		RobotUtil.sensorMover.setSpeed(600);
 		LeftSamples = new ArrayList<Float>(ArraySize * 2);
 		RightSamples = new ArrayList<Float>(ArraySize);
 		calibrateWhite();
@@ -90,7 +87,7 @@ public class KoopLineFollow implements ParcoursSegment {
 			if(checkTachoTask()) {
 				int sensorDirection = getDirection();
 				
-				RobotUtil.sensorMover.rotateTo(0, true);
+				RobotUtil.sensorMoverCenter();
 				
 				//Lücke
 				if (sensorDirection == 0){
@@ -121,7 +118,7 @@ public class KoopLineFollow implements ParcoursSegment {
 			
 		} 
 		
-		RobotUtil.sensorMover.rotateTo(0, true);
+		RobotUtil.sensorMoverCenter();
 		direction = 1;
 		
 		
@@ -178,9 +175,9 @@ public class KoopLineFollow implements ParcoursSegment {
 	
 	public void rotateSensorTask() {
 		if(direction == 1) {
-			RobotUtil.sensorMover.rotateTo(sensorStopL * direction, true);
+			RobotUtil.sensorMoverLeft();
 		} else {
-			RobotUtil.sensorMover.rotateTo(sensorStopR * direction, true);
+			RobotUtil.sensorMoverRight();
 		}
 	}
 	
@@ -202,10 +199,10 @@ public class KoopLineFollow implements ParcoursSegment {
 	
 	
 	public boolean checkTachoTask() {
-		if(RobotUtil.sensorMover.getTachoCount() >= sensorStopL) {
+		if(RobotUtil.isSensorMoverLeft()) {
 			direction = -1;
 			return false;
-		} else if(RobotUtil.sensorMover.getTachoCount() <= -(sensorStopR)) {
+		} else if(RobotUtil.isSensorMoverRight()) {
 			return true;
 		}
 		return false;
@@ -218,8 +215,8 @@ public class KoopLineFollow implements ParcoursSegment {
 		
 		int offset_angle = 15;
 		RobotUtil.sensorMover.rotateTo(offset_angle);
-		RobotUtil.sensorMover.rotateTo(sensorStopL, true);
-		while(RobotUtil.sensorMover.getTachoCount() < sensorStopL) {
+		RobotUtil.sensorMoverLeft();
+		while(!RobotUtil.isSensorMoverLeft()) {
 			readSensorTask();
 		}
 		RobotUtil.sensorMover.rotateTo(offset_angle);
@@ -229,12 +226,12 @@ public class KoopLineFollow implements ParcoursSegment {
 			MidSamples.add(currentValue);
 		}
 		
-		RobotUtil.sensorMover.rotateTo(-(sensorStopR), true);
-		while(RobotUtil.sensorMover.getTachoCount() > -(sensorStopR)) {
+		RobotUtil.sensorMoverRight();
+		while(!RobotUtil.isSensorMoverRight()) {
 			readSensorTask();
 		}
 		
-		RobotUtil.sensorMover.rotateTo(0);
+		RobotUtil.sensorMoverCenter();
 		
 		
 		

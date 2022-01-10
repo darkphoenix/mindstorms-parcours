@@ -39,6 +39,9 @@ public class RobotUtil {
 	public static RegulatedMotor rightMotor;
 	public static RegulatedMotor sensorMover;
 	
+	private static final int sensorStopL = 75;
+	private static final int sensorStopR = 90;
+	
 	public static void init() {
 		//init brick
 		brick = (EV3) BrickFinder.getLocal();
@@ -80,6 +83,8 @@ public class RobotUtil {
 		leftMotor = new EV3LargeRegulatedMotor(MotorPort.B);
 		rightMotor = new EV3LargeRegulatedMotor(MotorPort.A);
 		sensorMover = new EV3MediumRegulatedMotor(MotorPort.D);
+		sensorMover.resetTachoCount();
+		sensorMover.setSpeed(600);
 		
 		lcd.clear();
 	}
@@ -176,5 +181,29 @@ public class RobotUtil {
 	public static void spin(int degrees) {
 		rightMotor.rotate(-degrees, true);
 		leftMotor.rotate(degrees, false);
+	}
+	
+	public static void sensorMoverLeft() {
+		sensorMover.rotateTo(sensorStopL, true);
+	}
+	
+	public static void sensorMoverCenter() {
+		sensorMover.rotateTo(0, true);
+	}
+	
+	public static void sensorMoverRight() {
+		sensorMover.rotateTo(sensorStopR, true);
+	}
+	
+	public static boolean isSensorMoverLeft() {
+		return sensorMover.getTachoCount() >= sensorStopL;
+	}
+	
+	public static boolean isSensorMoverRight() {
+		return sensorMover.getTachoCount() >= sensorStopR;
+	}
+	
+	public static int sensorMoverTacho() {
+		return sensorMover.getTachoCount();
 	}
 }
