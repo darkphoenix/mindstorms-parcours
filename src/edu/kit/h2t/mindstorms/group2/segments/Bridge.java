@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import edu.kit.h2t.mindstorms.group2.RobotUtil;
 import lejos.hardware.Sound;
 import lejos.hardware.lcd.LCD;
+import lejos.utility.Delay;
 
 public class Bridge implements ParcoursSegment {
 	private int state = 0;
@@ -129,7 +130,7 @@ public class Bridge implements ParcoursSegment {
 				RobotUtil.rightMotor.rotate(-100, true);
 				RobotUtil.leftMotor.rotate(-100, false);
 				
-				//Turn Right
+				//Turn left
 				RobotUtil.spin(-600);
 				state++;
 				Sound.beep();
@@ -146,11 +147,19 @@ public class Bridge implements ParcoursSegment {
 		case 3:
 			RobotUtil.sensorMoverLeft();
 			
-			if(RobotUtil.getAngle() > 5) {
+			if (RobotUtil.getDistance() < 0.2 && RobotUtil.getAngle() < 5) {
+				Sound.buzz();
+				RobotUtil.spin(-100);
+				RobotUtil.syncForward();
+				Delay.msDelay(100);
+				RobotUtil.spin(100);
+				RobotUtil.syncForward();
+			}
+			else if(RobotUtil.getAngle() < 5) {
 				regulatedDriveTask();
 			} else {
 				RobotUtil.setMotorSpeed(360);
-				RobotUtil.sensorMoverCenter();
+				RobotUtil.sensorMoverRight();
 				state++;
 				Sound.beep();
 			}
