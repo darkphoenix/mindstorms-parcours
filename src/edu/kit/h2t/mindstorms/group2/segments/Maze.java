@@ -14,6 +14,10 @@ public class Maze implements ParcoursSegment {
 	private float redEps = 0.2f;
 	
 	public void init() {
+		while(RobotUtil.getDistance() > 0.2) {
+			RobotUtil.syncForward();
+		}
+		RobotUtil.turn(1200, false);
 	}
 
 	public void doStep() {
