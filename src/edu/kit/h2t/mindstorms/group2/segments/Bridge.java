@@ -130,12 +130,12 @@ public class Bridge implements ParcoursSegment {
 				RobotUtil.leftMotor.rotate(-100, false);
 				
 				//Turn Right
-				RobotUtil.spin(600);
+				RobotUtil.spin(-600);
 				state++;
 				Sound.beep();
 				
 				while(RobotUtil.getAngle() <= 5) {
-					RobotUtil.syncBackward();
+					RobotUtil.syncForward();
 				}
 				
 			} else {
@@ -147,9 +147,10 @@ public class Bridge implements ParcoursSegment {
 			RobotUtil.sensorMoverLeft();
 			
 			if(RobotUtil.getAngle() > 5) {
-				regulatedDriveTask(true);
+				regulatedDriveTask();
 			} else {
 				RobotUtil.setMotorSpeed(360);
+				RobotUtil.sensorMoverCenter();
 				state++;
 				Sound.beep();
 			}
@@ -162,6 +163,7 @@ public class Bridge implements ParcoursSegment {
 		
 	}
 
+	@Deprecated
 	private void unregulatedStates() {
 		switch(state) {
 		
@@ -213,6 +215,7 @@ public class Bridge implements ParcoursSegment {
 				RobotUtil.syncForward();
 			} else {
 				RobotUtil.setMotorSpeed(360);
+				
 				state++;
 				Sound.beep();
 			}
