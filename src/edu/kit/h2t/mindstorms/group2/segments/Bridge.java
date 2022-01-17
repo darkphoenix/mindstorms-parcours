@@ -2,6 +2,7 @@ package edu.kit.h2t.mindstorms.group2.segments;
 
 import java.util.ArrayList;
 
+import edu.kit.h2t.mindstorms.group2.ParcoursMain;
 import edu.kit.h2t.mindstorms.group2.RobotUtil;
 import lejos.hardware.Sound;
 import lejos.hardware.lcd.LCD;
@@ -18,6 +19,8 @@ public class Bridge implements ParcoursSegment {
 	private final double offset = 0.02;
 	private final double p = 3000;
 	private final double p2 = 1000;
+	
+	private boolean VoidAlligned = false;
 	
 	private final double diffEps = 0.1;
 	private final double sumBlueEps = 0.3;
@@ -38,6 +41,7 @@ public class Bridge implements ParcoursSegment {
 	
 	public void init() {
 		LCD.clear();
+		RobotUtil.resetAngle();
 		
 		LeftSamples = new ArrayList<Float>(ArraySize * 2);
 		RightSamples = new ArrayList<Float>(ArraySize);
@@ -148,8 +152,13 @@ public class Bridge implements ParcoursSegment {
 			RobotUtil.sensorMoverLeft();
 			
 			if(RobotUtil.getAngle() < 5) {
-				allignVoid();
-			
+				if(!VoidAlligned) {
+					VoidAlligned = allignVoid();
+					
+					Sound.buzz();
+				} else {
+					
+				}
 			} else {
 				RobotUtil.setMotorSpeed(360);
 				RobotUtil.sensorMoverRight();
@@ -165,17 +174,37 @@ public class Bridge implements ParcoursSegment {
 		
 	}
 	
-	private void allignVoid() {
+	private boolean allignVoid() {
+		RobotUtil.rightMotor.resetTachoCount();
+		RobotUtil.leftMotor.resetTachoCount();
+		
 		while(!isVoid()) {
-			RobotUtil.syncForward();
+			int y = (int) ((RobotUtil.getRed() - offset) * p);
+			
+			RobotUtil.leftMotor.setSpeed(baseRegulateSpeed - y);
+			RobotUtil.rightMotor.setSpeed(baseRegulateSpeed + y);
+			
+			if(RobotUtil.getAngle() > -5) {
+				return false;
+			}
 		}
 		RobotUtil.syncStop();
 		
 		while(isVoid()) {
-			RobotUtil.leftMotor.backward();
+			RobotUtil.rightMotor.backward();
+		}
+		RobotUtil.rightMotor.stop();
+		
+		//Backoff
+		RobotUtil.rightMotor.rotate(-50, true);
+		RobotUtil.leftMotor.rotate(-50, false);
+		
+		while(RobotUtil.getAbsTachoDiff() < 5) {
+			RobotUtil.leftMotor.forward();
 		}
 		RobotUtil.leftMotor.stop();
 		
+		return true;
 		
 	}
 
