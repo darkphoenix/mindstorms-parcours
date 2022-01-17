@@ -53,7 +53,7 @@ public class Maze implements ParcoursSegment {
 	}
 	
 	private void driveRoutine() {
-		if(RobotUtil.getTouch()) {
+		if(RobotUtil.getDistance() < 0.1) {
 			//Backoff
 			RobotUtil.rightMotor.rotate(-100, true);
 			RobotUtil.leftMotor.rotate(-100, false);
@@ -67,6 +67,11 @@ public class Maze implements ParcoursSegment {
 			}			
 			
 		}
+		
+		while(!RobotUtil.getTouch()) {
+			RobotUtil.syncBackward();
+		}
+		
 		RobotUtil.syncForward();
 	}
 	
