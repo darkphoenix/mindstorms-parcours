@@ -22,6 +22,7 @@ public class ParcoursMain {
 		segments.put(FindBridge.class.getSimpleName(), new FindBridge());
 		segments.put(Bridge.class.getSimpleName(), new Bridge());
 		segments.put("Bridge 2", new Bridge(2));
+		segments.put(Maze.class.getSimpleName(), new Maze());
 		
 		String names[] = segments.keySet().toArray(new String[segments.size()]);
 		
