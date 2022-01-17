@@ -142,6 +142,22 @@ public class RobotUtil {
 		return angle[0];
 	}
 	
+	public static void resetAngle() {
+		gyro.reset();
+	}
+	
+	public static int getLeftTacho() {
+		return leftMotor.getTachoCount();
+	}
+	
+	public static int getRightTacho() {
+		return rightMotor.getTachoCount();
+	}
+	
+	public static int getAbsTachoDiff() {
+		return Math.abs(getLeftTacho() - getRightTacho());
+	}
+	
 	public static void syncForward() {
 		leftMotor.resetTachoCount();
 		rightMotor.resetTachoCount();
@@ -196,6 +212,22 @@ public class RobotUtil {
 	public static void spin(int degrees) {
 		rightMotor.rotate(-degrees, true);
 		leftMotor.rotate(degrees, false);
+	}
+	
+	/**
+	 * 
+	 * Make a turn with only one motor moving.
+	 * @param degrees Motor degrees.
+	 * @param rightTurn if true, roboter makes a right turn. Turns left otherwise.
+	 */
+	public static void turn(int degrees, boolean rightTurn) {
+		if(rightTurn) {
+			rightMotor.stop();
+			leftMotor.rotate(degrees);
+		} else {
+			leftMotor.stop();
+			rightMotor.rotate(degrees);
+		}
 	}
 	
 	public static void sensorMoverLeft() {
