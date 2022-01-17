@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import edu.kit.h2t.mindstorms.group2.ParcoursMain;
 import edu.kit.h2t.mindstorms.group2.RobotUtil;
+import lejos.hardware.Sound;
 import lejos.hardware.lcd.LCD;
 
 public class KoopLineFollow implements ParcoursSegment {

@@ -40,7 +40,7 @@ public class RobotUtil {
 	public static RegulatedMotor sensorMover;
 	
 	private static final int sensorStopL = 75;
-	private static final int sensorStopR = 90;
+	private static final int sensorStopR = -90;
 	
 	public static void init() {
 		//init brick
@@ -215,7 +215,7 @@ public class RobotUtil {
 	}
 	
 	public static boolean isSensorMoverRight() {
-		return sensorMover.getTachoCount() >= sensorStopR;
+		return sensorMover.getTachoCount() <= sensorStopR;
 	}
 	
 	public static int sensorMoverTacho() {
