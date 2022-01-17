@@ -15,9 +15,9 @@ public class KoopLineFollow implements ParcoursSegment {
 	
 	private final int baseRegulateSpeed = 250;
 	private final int baseSpeed = 360;
-	private final float blackEps = 0.1f;
-	private double whiteEps = 0.4f;
-	private final double sumWhiteEps = 0.3;
+	private double blackEps;
+	private double whiteEps = 0.37f;
+	private final double sumWhiteEps = 0.25;
 	private final double diffEps = 0.08;
 	
 	private int ArraySize = 100;
@@ -29,7 +29,8 @@ public class KoopLineFollow implements ParcoursSegment {
 		RobotUtil.setMotorSpeed(baseSpeed);
 		LeftSamples = new ArrayList<Float>(ArraySize * 2);
 		RightSamples = new ArrayList<Float>(ArraySize);
-		calibrateWhite();
+		//whiteEps = calibrateWhite();
+		blackEps = whiteEps/5.0;
 	}
 
 	public void doStep() {
@@ -77,53 +78,67 @@ public class KoopLineFollow implements ParcoursSegment {
 	}
 	
 	public void searchLine() {
-		while(true) {
+		double correction = 1;
+		RobotUtil.setMotorSpeed(baseSpeed);
+		
+		while(!checkTachoTask()) {
 			//LCD.drawString("rotate",4,6);
 			rotateSensorTask();
 			//LCD.clear(6);
 			readSensorTask();
-				
-				//Drive into line direction until found.
+		}
 			
-			if(checkTachoTask()) {
-				int sensorDirection = getDirection();
-				
-				RobotUtil.sensorMoverCenter();
-				
-				//Lücke
-				if (sensorDirection == 0){
-					RobotUtil.setMotorSpeed(baseSpeed);
-					
-					RobotUtil.leftMotor.rotate(100, true);
-					RobotUtil.rightMotor.rotate(100, false);
-				}
-				//Korrektur
-				else {
-					while(RobotUtil.getRed() < whiteEps) {
-						LCD.drawString("K:" + RobotUtil.getRed(),2,4);
-						//Links
-						if(sensorDirection == 1) {
-							RobotUtil.rightMotor.rotate(100, true);
-						} 
-						//rechts
-						else if(sensorDirection == -1) {
-							RobotUtil.leftMotor.rotate(150, true);
-							RobotUtil.rightMotor.rotate(-100, true);
-						}
-					}
-					RobotUtil.syncStop();
-				}	
-				
-				break;
-			}
-			
-		} 
+		//Drive into line direction until found.
+	
+		int sensorDirection = getDirection();
 		
 		RobotUtil.sensorMoverCenter();
-		direction = 1;
 		
+		//Lücke
+		if (sensorDirection == 0){
+			RobotUtil.leftMotor.rotate(500, true);
+			RobotUtil.rightMotor.rotate(500, false);
+		}
+		//Korrektur
+		else {
+			while(RobotUtil.getRed() < whiteEps) {
+				LCD.drawString("K:" + RobotUtil.getRed(),2,4);
+				//Links
+				if(sensorDirection == 1) {
+					RobotUtil.rightMotor.forward();
+					RobotUtil.leftMotor.setSpeed(baseSpeed/2);
+					RobotUtil.leftMotor.backward();
+					correction = 0.9;
+				} 
+				//rechts
+				else if(sensorDirection == -1) {
+					RobotUtil.rightMotor.backward();
+					RobotUtil.leftMotor.setSpeed(baseSpeed/2);
+					RobotUtil.leftMotor.forward();
+					correction = 0.7;
+				}
+			}
+			
+			while(RobotUtil.getRed() > whiteEps*correction) {
+				LCD.drawString("K:" + RobotUtil.getRed(),2,4);
+				//Links
+				if(sensorDirection == 1) {
+					RobotUtil.rightMotor.forward();
+					RobotUtil.leftMotor.setSpeed(baseSpeed/2);
+					RobotUtil.leftMotor.backward();
+				} 
+				//rechts
+				else if(sensorDirection == -1) {
+					RobotUtil.rightMotor.backward();
+					RobotUtil.leftMotor.setSpeed(baseSpeed/2);
+					RobotUtil.leftMotor.forward();
+				}
+			}
+
+			RobotUtil.syncStop();
+		}	
 		
-					
+		direction = 1;		
 	}
 	
 	public int getDirection() {
@@ -211,7 +226,7 @@ public class KoopLineFollow implements ParcoursSegment {
 	
 	
 	
-	public float calibrateWhite() {
+	public double calibrateWhite() {
 		ArrayList<Float>MidSamples = new ArrayList<Float>(ArraySize);
 		
 		int offset_angle = 15;
@@ -240,16 +255,16 @@ public class KoopLineFollow implements ParcoursSegment {
 		double rightAvg = calculateAverage(RightSamples);
 		double midAvg = calculateAverage(MidSamples);
 		
-		whiteEps = midAvg;
+		//whiteEps = midAvg;
 		
 		LCD.clear(7);
 		if(Double.toString(leftAvg).length() >= 4 && Double.toString(rightAvg).length() >= 4 && Double.toString(midAvg).length() >= 3) {
-		LCD.drawString("L:" + Double.toString(leftAvg).substring(1, 4) + "M:" + Double.toString(midAvg).substring(1, 3) + "R:" + Double.toString(rightAvg).substring(1, 4) ,4,7);
+		//LCD.drawString("L:" + Double.toString(leftAvg).substring(1, 4) + "M:" + Double.toString(midAvg).substring(1, 3) + "R:" + Double.toString(rightAvg).substring(1, 4) ,4,7);
 		}
 		
 		LeftSamples = new ArrayList<Float>(ArraySize * 2);
 		RightSamples = new ArrayList<Float>(ArraySize);
 		MidSamples = new ArrayList<Float>(ArraySize);
-		return 0.4f;
+		return midAvg*1.1;
 	}
 }
