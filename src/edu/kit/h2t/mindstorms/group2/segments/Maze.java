@@ -64,13 +64,14 @@ public class Maze implements ParcoursSegment {
 			} else {
 				//Turn right
 				RobotUtil.spin(600);
-			}			
+			}	
+			
+			while(!RobotUtil.getTouch()) {
+				RobotUtil.syncBackward();
+			}
 			
 		}
 		
-		while(!RobotUtil.getTouch()) {
-			RobotUtil.syncBackward();
-		}
 		
 		RobotUtil.syncForward();
 	}
