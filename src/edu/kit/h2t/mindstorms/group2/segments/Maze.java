@@ -60,18 +60,19 @@ public class Maze implements ParcoursSegment {
 			
 			if(turnDirectionLeft) {
 				//Turn left
-				RobotUtil.spin(-600);
+				RobotUtil.turn(2550, false);
 			} else {
 				//Turn right
-				RobotUtil.spin(600);
-			}	
+				RobotUtil.turn(2550, true);
+			}
+		
+			turnDirectionLeft = !turnDirectionLeft;
 			
 			while(!RobotUtil.getTouch()) {
 				RobotUtil.syncBackward();
 			}
 			
 		}
-		
 		
 		RobotUtil.syncForward();
 	}
