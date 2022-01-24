@@ -1,6 +1,7 @@
 package edu.kit.h2t.mindstorms.group2;
 
 import lejos.hardware.Button;
+import lejos.hardware.Sound;
 import lejos.utility.TextMenu;
 
 import java.util.HashMap;
@@ -36,6 +37,7 @@ public class ParcoursMain {
 	}
 	
 	public static void moveTo(String segNew) {
+		Sound.beep();
 		seg = segments.get(segNew);
 		RobotUtil.lcd.clear();
 		RobotUtil.lcd.drawString(segNew, 1, 1);
