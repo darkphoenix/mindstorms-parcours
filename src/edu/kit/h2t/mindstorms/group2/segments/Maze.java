@@ -11,14 +11,14 @@ public class Maze implements ParcoursSegment {
 	private boolean foundRed = false;
 	private boolean turnDirectionLeft = true;
 	
-	private float whiteEps = 0.25f;
-	private float redEps = 0.75f;
+	private float whiteEps = 0.2f;
+	private float redEps = 0.07f;
 	
 	public void init() {
-		while(RobotUtil.getDistance() > 0.1 && RobotUtil.chk()) {
+		while(RobotUtil.getDistance() > 0.15 && RobotUtil.chk()) {
 			RobotUtil.syncForward();
 		}
-		RobotUtil.turn(1100, false);
+		RobotUtil.turn(1150, false);
 	}
 
 	public void doStep() {
@@ -29,9 +29,8 @@ public class Maze implements ParcoursSegment {
 		searchRoutine();
 		if(foundRed && foundWhite) {
 			Sound.twoBeeps();
-			RobotUtil.oneUpSound();
+//			RobotUtil.oneUpSound();
 			RobotUtil.syncStop();
-			ParcoursMain.moveTo(null);
 		}
 	}
 	
@@ -69,11 +68,7 @@ public class Maze implements ParcoursSegment {
 		float green = rgb[1];
 		float blue = rgb[2];
 		
-		if(red < redEps && green > whiteEps) {
-			return true;
-		}
-		
-		return false;
+		return blue > whiteEps && green > whiteEps;		
 	}
 	
 	private boolean isRed(float[] rgb) {
@@ -81,21 +76,21 @@ public class Maze implements ParcoursSegment {
 		float green = rgb[1];
 		float blue = rgb[2];
 		
-		return red > redEps;
+		return red > redEps && green < redEps;
 	}
 	
 	private void driveRoutine() {
-		if(RobotUtil.getDistance() < 0.13) {
+		if(RobotUtil.getDistance() < 0.15) {
 			//Backoff
 			RobotUtil.rightMotor.rotate(-100, true);
 			RobotUtil.leftMotor.rotate(-100, false);
 			
 			if(turnDirectionLeft) {
 				//Turn left
-				RobotUtil.turn(2550, false);
+				RobotUtil.turn(2400, false);
 			} else {
 				//Turn right
-				RobotUtil.turn(2550, true);
+				RobotUtil.turn(2400, true);
 			}
 		
 			turnDirectionLeft = !turnDirectionLeft;
