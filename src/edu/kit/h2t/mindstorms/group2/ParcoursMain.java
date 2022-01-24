@@ -18,6 +18,7 @@ public class ParcoursMain {
 
 		//Import modules
 		segments = new HashMap<String, ParcoursSegment>();
+		segments.put("Exit", null);
 		segments.put(KoopLineFollow.class.getSimpleName(), new KoopLineFollow());
 		segments.put(Hermes.class.getSimpleName(), new Hermes());
 		segments.put(FindBridge.class.getSimpleName(), new FindBridge());
@@ -31,11 +32,13 @@ public class ParcoursMain {
 			TextMenu segmentMenu = new TextMenu(names, 1, "Segment");
 			int segNum = segmentMenu.select();
 			if(segNum == -1) continue;
+			if(names[segNum] == "Exit") break;
 			moveTo(names[segNum]);
 			while(!Button.ESCAPE.isDown())
 				seg.doStep();
 			//Stop, in case segment didn't end properly
 			RobotUtil.syncStop();
+			RobotUtil.lcd.clear();
 		}
 	}
 	
