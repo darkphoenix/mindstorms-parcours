@@ -10,6 +10,7 @@ import lejos.utility.Delay;
 
 public class Bridge implements ParcoursSegment {
 	private int state = 0;
+	private int startState = 0;
 	private int turns = 0;
 	
 	private final int sensorStopL = 75;
@@ -32,7 +33,7 @@ public class Bridge implements ParcoursSegment {
 	private ArrayList<Float> RightSamples;
 	
 	public Bridge(int state) {
-		this.state = state;
+		this.startState = state;
 	}
 	
 	public Bridge() {
@@ -40,6 +41,7 @@ public class Bridge implements ParcoursSegment {
 	}
 	
 	public void init() {
+		state = startState;
 		LCD.clear();
 		RobotUtil.resetAngle();
 		
@@ -154,10 +156,9 @@ public class Bridge implements ParcoursSegment {
 			if(RobotUtil.getAngle() < 5) {
 				if(!VoidAlligned) {
 					VoidAlligned = allignVoid();
-					
 					Sound.buzz();
 				} else {
-					
+					RobotUtil.syncForward();
 				}
 			} else {
 				RobotUtil.setMotorSpeed(360);
