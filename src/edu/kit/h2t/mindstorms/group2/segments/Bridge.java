@@ -108,10 +108,8 @@ public class Bridge implements ParcoursSegment {
 			break;
 		
 		//Correction	
-		case 2:	
-			
-			if(isVoid() && turns < 1) {
-				turns++;
+		case 2:				
+			if(isVoid()) {
 				RobotUtil.syncStop();
 				
 				//Backoff
