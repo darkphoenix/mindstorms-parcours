@@ -1,19 +1,14 @@
 package edu.kit.h2t.mindstorms.group2.segments;
 
-import java.util.ArrayList;
-
 import edu.kit.h2t.mindstorms.group2.ParcoursMain;
 import edu.kit.h2t.mindstorms.group2.RobotUtil;
 import lejos.hardware.Sound;
 import lejos.hardware.lcd.LCD;
-import lejos.utility.Delay;
 
 public class Bridge implements ParcoursSegment {
 	private int state = 0;
+	private int startState = 0;
 	private int turns = 0;
-	
-	private final int sensorStopL = 75;
-	private final int sensorStopR = 90;
 	
 	private final int baseRegulateSpeed = 250;
 	private final double offset = 0.02;
@@ -22,17 +17,8 @@ public class Bridge implements ParcoursSegment {
 	
 	private boolean VoidAlligned = false;
 	
-	private final double diffEps = 0.1;
-	private final double sumBlueEps = 0.3;
-	
-	private final int ArraySize = 100;
-	
-	
-	private ArrayList<Float> LeftSamples;
-	private ArrayList<Float> RightSamples;
-	
 	public Bridge(int state) {
-		this.state = state;
+		this.startState = state;
 	}
 	
 	public Bridge() {
@@ -40,11 +26,9 @@ public class Bridge implements ParcoursSegment {
 	}
 	
 	public void init() {
+		state = startState;
 		LCD.clear();
 		RobotUtil.resetAngle();
-		
-		LeftSamples = new ArrayList<Float>(ArraySize * 2);
-		RightSamples = new ArrayList<Float>(ArraySize);
 		
 //		sensorMover.rotateTo(sensorStopL);
 		Sound.buzz();
@@ -124,10 +108,8 @@ public class Bridge implements ParcoursSegment {
 			break;
 		
 		//Correction	
-		case 2:	
-			
-			if(isVoid() && turns < 1) {
-				turns++;
+		case 2:				
+			if(isVoid()) {
 				RobotUtil.syncStop();
 				
 				//Backoff
@@ -154,10 +136,9 @@ public class Bridge implements ParcoursSegment {
 			if(RobotUtil.getAngle() < 5) {
 				if(!VoidAlligned) {
 					VoidAlligned = allignVoid();
-					
 					Sound.buzz();
 				} else {
-					
+					RobotUtil.syncForward();
 				}
 			} else {
 				RobotUtil.setMotorSpeed(360);
