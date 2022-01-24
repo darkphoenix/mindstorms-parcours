@@ -24,6 +24,8 @@ public class Hermes implements ParcoursSegment {
 		leftTacho = RobotUtil.leftMotor.getTachoCount();
 		rightTacho = RobotUtil.rightMotor.getTachoCount();
 		
+		RobotUtil.setMotorSpeed(RobotUtil.baseSpeed);
+		
 	}
 	public void doStep() {
 		RobotUtil.rightMotor.backward();
@@ -32,7 +34,7 @@ public class Hermes implements ParcoursSegment {
 		
 		LCD.drawString("Distance: " + dis, 2, 4);
 		
-		if(dis < 0.4) {
+		if(dis < 0.2) {
 			RobotUtil.rightMotor.stop(true);
 			RobotUtil.leftMotor.stop();
 			
@@ -43,8 +45,7 @@ public class Hermes implements ParcoursSegment {
 			//RobotUtil.leftMotor.rotate(-300, true);
 			//RobotUtil.rightMotor.rotate(-300, false);
 			
-			RobotUtil.rightMotor.rotate(-1200, true);
-			RobotUtil.leftMotor.rotate(1200, false);
+			RobotUtil.spin(1200);
 			
 			RobotUtil.setMotorSpeed(10000);
 			RobotUtil.rightMotor.backward();
