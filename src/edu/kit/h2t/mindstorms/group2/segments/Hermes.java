@@ -34,7 +34,7 @@ public class Hermes implements ParcoursSegment {
 		
 		LCD.drawString("Distance: " + dis, 2, 4);
 		
-		if(dis < 0.2) {
+		if(dis < 0.4) {
 			RobotUtil.rightMotor.stop(true);
 			RobotUtil.leftMotor.stop();
 			

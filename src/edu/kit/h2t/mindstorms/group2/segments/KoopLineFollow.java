@@ -52,17 +52,17 @@ public class KoopLineFollow implements ParcoursSegment {
 			RobotUtil.rightMotor.rotate(-440, true);
 			RobotUtil.leftMotor.rotate(440, false);
 			//Forward
-			RobotUtil.leftMotor.rotate(1400, true);
-			RobotUtil.rightMotor.rotate(1400, false);
+			RobotUtil.leftMotor.rotate(1200, true);
+			RobotUtil.rightMotor.rotate(1200, false);
 			//Turn right
-			RobotUtil.rightMotor.rotate(-450, true);
-			RobotUtil.leftMotor.rotate(450, false);
+			RobotUtil.rightMotor.rotate(-350, true);
+			RobotUtil.leftMotor.rotate(350, false);
 			//Move
 			RobotUtil.leftMotor.rotate(600, true);
 			RobotUtil.rightMotor.rotate(600, false);
 			//Turn left
-			RobotUtil.rightMotor.rotate(450, true);
-			RobotUtil.leftMotor.rotate(-450, false);
+			RobotUtil.rightMotor.rotate(350, true);
+			RobotUtil.leftMotor.rotate(-350, false);
 			ParcoursMain.moveTo("Hermes");
 		} else if (RobotUtil.getRed() > blackEps) {
 			//LCD.drawString("regulated",4,6);
