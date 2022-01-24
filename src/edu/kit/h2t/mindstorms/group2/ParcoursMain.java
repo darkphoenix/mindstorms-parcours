@@ -37,6 +37,7 @@ public class ParcoursMain {
 			while(!Button.ESCAPE.isDown())
 				seg.doStep();
 			//Stop, in case segment didn't end properly
+			RobotUtil.sensorMoverCenter(true);
 			RobotUtil.syncStop();
 			RobotUtil.lcd.clear();
 		}
