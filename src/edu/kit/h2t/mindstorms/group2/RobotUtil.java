@@ -46,6 +46,8 @@ public class RobotUtil {
 	private static final int sensorStopL = 75;
 	private static final int sensorStopR = -90;
 	
+	public static final int baseSpeed = 360;
+	
 	public static void init() {
 		//init brick
 		brick = (EV3) BrickFinder.getLocal();

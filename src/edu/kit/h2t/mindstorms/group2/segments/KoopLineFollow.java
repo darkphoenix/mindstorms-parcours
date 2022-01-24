@@ -14,7 +14,6 @@ public class KoopLineFollow implements ParcoursSegment {
 	private int direction = 1;
 	
 	private final int baseRegulateSpeed = 250;
-	private final int baseSpeed = 360;
 	private double blackEps;
 	private double whiteEps = 0.37f;
 	private final double sumWhiteEps = 0.25;
@@ -26,7 +25,7 @@ public class KoopLineFollow implements ParcoursSegment {
 	private ArrayList<Float> RightSamples;
 	
 	public void init() {
-		RobotUtil.setMotorSpeed(baseSpeed);
+		RobotUtil.setMotorSpeed(RobotUtil.baseSpeed);
 		LeftSamples = new ArrayList<Float>(ArraySize * 2);
 		RightSamples = new ArrayList<Float>(ArraySize);
 		//whiteEps = calibrateWhite();
@@ -39,7 +38,7 @@ public class KoopLineFollow implements ParcoursSegment {
 		
 		if (RobotUtil.getDistance() < 0.05) {
 			RobotUtil.syncStop();
-			RobotUtil.setMotorSpeed(baseSpeed);
+			RobotUtil.setMotorSpeed(RobotUtil.baseSpeed);
 			//Back off
 			RobotUtil.leftMotor.rotate(-400, true);
 			RobotUtil.rightMotor.rotate(-400, false);
@@ -53,17 +52,17 @@ public class KoopLineFollow implements ParcoursSegment {
 			RobotUtil.rightMotor.rotate(-440, true);
 			RobotUtil.leftMotor.rotate(440, false);
 			//Forward
-			RobotUtil.leftMotor.rotate(1400, true);
-			RobotUtil.rightMotor.rotate(1400, false);
+			RobotUtil.leftMotor.rotate(1200, true);
+			RobotUtil.rightMotor.rotate(1200, false);
 			//Turn right
-			RobotUtil.rightMotor.rotate(-450, true);
-			RobotUtil.leftMotor.rotate(450, false);
+			RobotUtil.rightMotor.rotate(-350, true);
+			RobotUtil.leftMotor.rotate(350, false);
 			//Move
 			RobotUtil.leftMotor.rotate(600, true);
 			RobotUtil.rightMotor.rotate(600, false);
 			//Turn left
-			RobotUtil.rightMotor.rotate(450, true);
-			RobotUtil.leftMotor.rotate(-450, false);
+			RobotUtil.rightMotor.rotate(350, true);
+			RobotUtil.leftMotor.rotate(-350, false);
 			ParcoursMain.moveTo("Hermes");
 		} else if (RobotUtil.getRed() > blackEps) {
 			//LCD.drawString("regulated",4,6);
@@ -79,7 +78,7 @@ public class KoopLineFollow implements ParcoursSegment {
 	
 	public void searchLine() {
 		double correction = 1;
-		RobotUtil.setMotorSpeed(baseSpeed);
+		RobotUtil.setMotorSpeed(RobotUtil.baseSpeed);
 		
 		while(!checkTachoTask() && RobotUtil.chk()) {
 			//LCD.drawString("rotate",4,6);
@@ -109,14 +108,14 @@ public class KoopLineFollow implements ParcoursSegment {
 				//Links
 				if(sensorDirection == 1) {
 					RobotUtil.rightMotor.forward();
-					RobotUtil.leftMotor.setSpeed(baseSpeed/2);
+					RobotUtil.leftMotor.setSpeed(RobotUtil.baseSpeed/2);
 					RobotUtil.leftMotor.backward();
 					correction = 0.9;
 				} 
 				//rechts
 				else if(sensorDirection == -1) {
 					RobotUtil.rightMotor.backward();
-					RobotUtil.leftMotor.setSpeed(baseSpeed/2);
+					RobotUtil.leftMotor.setSpeed(RobotUtil.baseSpeed/2);
 					RobotUtil.leftMotor.forward();
 					correction = 0.8;
 				}
@@ -127,13 +126,13 @@ public class KoopLineFollow implements ParcoursSegment {
 				//Links
 				if(sensorDirection == 1) {
 					RobotUtil.rightMotor.forward();
-					RobotUtil.leftMotor.setSpeed(baseSpeed/2);
+					RobotUtil.leftMotor.setSpeed(RobotUtil.baseSpeed/2);
 					RobotUtil.leftMotor.backward();
 				} 
 				//rechts
 				else if(sensorDirection == -1) {
 					RobotUtil.rightMotor.backward();
-					RobotUtil.leftMotor.setSpeed(baseSpeed/2);
+					RobotUtil.leftMotor.setSpeed(RobotUtil.baseSpeed/2);
 					RobotUtil.leftMotor.forward();
 				}
 			}
