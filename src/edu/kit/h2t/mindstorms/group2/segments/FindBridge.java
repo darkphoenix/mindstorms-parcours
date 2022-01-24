@@ -91,7 +91,7 @@ public class FindBridge implements ParcoursSegment {
 	}
 	
 	private void correctCourseTacho() {
-		while((RobotUtil.leftMotor.getTachoCount() - leftDelta) > 5) {
+		while((RobotUtil.leftMotor.getTachoCount() - leftDelta) > 5  && RobotUtil.chk()) {
 			RobotUtil.rightMotor.forward();
 			RobotUtil.leftMotor.backward();
 		} 
@@ -103,7 +103,7 @@ public class FindBridge implements ParcoursSegment {
 	
 	private void correctDistance() {
 		RobotUtil.lcd.clear();
-		while(RobotUtil.getDistance() < 0.9) {
+		while(RobotUtil.getDistance() < 0.9 && RobotUtil.chk()) {
 			//Turn left
 			RobotUtil.rightMotor.forward();
 			RobotUtil.leftMotor.backward();
@@ -112,7 +112,7 @@ public class FindBridge implements ParcoursSegment {
 		RobotUtil.lcd.drawString("D1: " + RobotUtil.getDistance(), 2, 6);
 		Sound.beep();
 		
-		while(RobotUtil.getDistance() > 0.8) {
+		while(RobotUtil.getDistance() > 0.8 && RobotUtil.chk()) {
 			//Turn left
 			RobotUtil.rightMotor.forward();
 			RobotUtil.leftMotor.backward();
@@ -129,7 +129,7 @@ public class FindBridge implements ParcoursSegment {
 	}
 	
 	private void correctCourseWhite() {
-		while(true) {
+		while(RobotUtil.chk()) {
 			
 			RobotUtil.lcd.drawString("White? :   " + isBlueLine() + "!", 2,6 );
 			RobotUtil.rightMotor.forward();
@@ -149,11 +149,11 @@ public class FindBridge implements ParcoursSegment {
 	
 	public void readBlue() {
 		RobotUtil.sensorMoverLeft();
-		while(!RobotUtil.isSensorMoverLeft()) {
+		while(!RobotUtil.isSensorMoverLeft() && RobotUtil.chk()) {
 			readSensorTask();
 		}
 		RobotUtil.sensorMoverRight();
-		while(RobotUtil.isSensorMoverRight()) {
+		while(RobotUtil.isSensorMoverRight() && RobotUtil.chk()) {
 			readSensorTask();
 		}
 		RobotUtil.sensorMoverCenter();

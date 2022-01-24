@@ -27,7 +27,7 @@ public class ParcoursMain {
 		
 		String names[] = segments.keySet().toArray(new String[segments.size()]);
 		
-		while(!Button.ESCAPE.isDown()) {
+		while(true) {
 			TextMenu segmentMenu = new TextMenu(names, 1, "Segment");
 			int segNum = segmentMenu.select();
 			moveTo(names[segNum]);

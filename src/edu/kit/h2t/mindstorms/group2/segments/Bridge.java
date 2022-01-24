@@ -104,7 +104,7 @@ public class Bridge implements ParcoursSegment {
 			if(RobotUtil.getAngle() < 5) {
 				RobotUtil.setMotorSpeed(360);
 				RobotUtil.sensorMoverCenter();
-				while(!isVoid()) {
+				while(!isVoid() && RobotUtil.chk()) {
 					RobotUtil.syncForward();
 				}
 				
@@ -139,7 +139,7 @@ public class Bridge implements ParcoursSegment {
 				state++;
 				Sound.beep();
 				
-				while(RobotUtil.getAngle() >= -5) {
+				while(RobotUtil.getAngle() >= -5 && RobotUtil.chk()) {
 					RobotUtil.syncForward();
 				}
 				
@@ -178,7 +178,7 @@ public class Bridge implements ParcoursSegment {
 		RobotUtil.rightMotor.resetTachoCount();
 		RobotUtil.leftMotor.resetTachoCount();
 		
-		while(!isVoid()) {
+		while(!isVoid() && RobotUtil.chk()) {
 			int y = (int) ((RobotUtil.getRed() - offset) * p);
 			
 			RobotUtil.leftMotor.setSpeed(baseRegulateSpeed - y);
@@ -190,7 +190,7 @@ public class Bridge implements ParcoursSegment {
 		}
 		RobotUtil.syncStop();
 		
-		while(isVoid()) {
+		while(isVoid() && RobotUtil.chk()) {
 			RobotUtil.rightMotor.backward();
 		}
 		RobotUtil.rightMotor.stop();
@@ -199,7 +199,7 @@ public class Bridge implements ParcoursSegment {
 		RobotUtil.rightMotor.rotate(-50, true);
 		RobotUtil.leftMotor.rotate(-50, false);
 		
-		while(RobotUtil.getAbsTachoDiff() < 5) {
+		while(RobotUtil.getAbsTachoDiff() < 5 && RobotUtil.chk()) {
 			RobotUtil.leftMotor.forward();
 		}
 		RobotUtil.leftMotor.stop();
@@ -301,7 +301,7 @@ public class Bridge implements ParcoursSegment {
 	}
 	
 	public void getToBridge() {
-		while(RobotUtil.getAngle() < 5) {
+		while(RobotUtil.getAngle() < 5 && RobotUtil.chk()) {
 			RobotUtil.syncForward();
 		}
 	}

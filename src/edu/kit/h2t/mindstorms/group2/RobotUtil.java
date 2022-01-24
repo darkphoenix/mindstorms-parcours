@@ -1,6 +1,7 @@
 package edu.kit.h2t.mindstorms.group2;
 
 import lejos.hardware.BrickFinder;
+import lejos.hardware.Button;
 import lejos.hardware.ev3.EV3;
 import lejos.hardware.lcd.TextLCD;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
@@ -256,5 +257,9 @@ public class RobotUtil {
 	
 	public static int sensorMoverTacho() {
 		return sensorMover.getTachoCount();
+	}
+	
+	public static boolean chk() {
+		return !Button.ESCAPE.isDown();
 	}
 }

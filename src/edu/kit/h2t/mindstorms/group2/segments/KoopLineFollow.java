@@ -81,7 +81,7 @@ public class KoopLineFollow implements ParcoursSegment {
 		double correction = 1;
 		RobotUtil.setMotorSpeed(baseSpeed);
 		
-		while(!checkTachoTask()) {
+		while(!checkTachoTask() && RobotUtil.chk()) {
 			//LCD.drawString("rotate",4,6);
 			rotateSensorTask();
 			//LCD.clear(6);
@@ -104,7 +104,7 @@ public class KoopLineFollow implements ParcoursSegment {
 		}
 		//Korrektur
 		else {
-			while(RobotUtil.getRed() < whiteEps) {
+			while(RobotUtil.getRed() < whiteEps && RobotUtil.chk()) {
 				LCD.drawString("K:" + RobotUtil.getRed(),2,4);
 				//Links
 				if(sensorDirection == 1) {
@@ -122,7 +122,7 @@ public class KoopLineFollow implements ParcoursSegment {
 				}
 			}
 			
-			while(RobotUtil.getRed() > whiteEps*correction) {
+			while(RobotUtil.getRed() > whiteEps*correction && RobotUtil.chk()) {
 				LCD.drawString("K:" + RobotUtil.getRed(),2,4);
 				//Links
 				if(sensorDirection == 1) {
@@ -235,18 +235,18 @@ public class KoopLineFollow implements ParcoursSegment {
 		int offset_angle = 15;
 		RobotUtil.sensorMover.rotateTo(offset_angle);
 		RobotUtil.sensorMoverLeft();
-		while(!RobotUtil.isSensorMoverLeft()) {
+		while(!RobotUtil.isSensorMoverLeft() && RobotUtil.chk()) {
 			readSensorTask();
 		}
 		RobotUtil.sensorMover.rotateTo(offset_angle);
 		RobotUtil.sensorMover.rotateTo(-offset_angle, true);
-		while(RobotUtil.sensorMover.getTachoCount() > -(offset_angle)) {
+		while(RobotUtil.sensorMover.getTachoCount() > -(offset_angle) && RobotUtil.chk()) {
 			float currentValue = RobotUtil.getRed();
 			MidSamples.add(currentValue);
 		}
 		
 		RobotUtil.sensorMoverRight();
-		while(!RobotUtil.isSensorMoverRight()) {
+		while(!RobotUtil.isSensorMoverRight() && RobotUtil.chk()) {
 			readSensorTask();
 		}
 		

@@ -54,7 +54,7 @@ public class Hermes implements ParcoursSegment {
 			
 			int abort = 0;
 			
-			while(true) {
+			while(RobotUtil.chk()) {
 				LCD.drawString("Touch " + abort, 2,5);
 				if(RobotUtil.getTouch()) {
 					if(abort >= 0)
