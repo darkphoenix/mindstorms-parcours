@@ -180,6 +180,8 @@ public class Bridge implements ParcoursSegment {
 		}
 		RobotUtil.rightMotor.stop();
 		
+		RobotUtil.gameoverSound();
+		
 		//Backoff
 		RobotUtil.rightMotor.rotate(-50, true);
 		RobotUtil.leftMotor.rotate(-50, false);

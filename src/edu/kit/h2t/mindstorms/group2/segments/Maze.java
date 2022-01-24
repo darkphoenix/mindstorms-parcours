@@ -22,13 +22,14 @@ public class Maze implements ParcoursSegment {
 	}
 
 	public void doStep() {
-		LCD.drawString("White: " + foundWhite, 3, 4);
-		LCD.drawString("Red: " + foundRed, 3, 5);
+		LCD.drawString("White: " + foundWhite, 2, 2);
+		LCD.drawString("Red: " + foundRed, 2, 3);
 		
 		driveRoutine();
 		searchRoutine();
 		if(foundRed && foundWhite) {
 			Sound.twoBeeps();
+			RobotUtil.oneUpSound();
 			RobotUtil.syncStop();
 			ParcoursMain.moveTo(null);
 		}
@@ -36,6 +37,15 @@ public class Maze implements ParcoursSegment {
 	
 	private void searchRoutine() {
 		float[] color = RobotUtil.getRGB();
+		
+		float red = color[0];
+		float green = color[1];
+		float blue = color[2];
+		
+		RobotUtil.lcd.drawString("red: " + red, 2, 4);
+		RobotUtil.lcd.drawString("green: " + green, 2, 5);
+		RobotUtil.lcd.drawString("blue: " + blue, 2, 6);
+		
 		if(isRed(color) && !isWhite(color))  {
 			//Beep on first sound
 			if(!foundRed) {
