@@ -1,7 +1,10 @@
 package edu.kit.h2t.mindstorms.group2;
 
+import java.io.File;
+
 import lejos.hardware.BrickFinder;
 import lejos.hardware.Button;
+import lejos.hardware.Sound;
 import lejos.hardware.ev3.EV3;
 import lejos.hardware.lcd.TextLCD;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
@@ -228,6 +231,27 @@ public class RobotUtil {
 		} else {
 			leftMotor.stop();
 			rightMotor.rotate(degrees);
+		}
+	}
+	
+	
+	
+	
+	public static void oneUpSound() {
+		try {
+			File sound = new File("../sounds/smb_1-up.wav");
+			Sound.playSample(sound);
+		} catch(Exception e) {
+			
+		}
+	}
+	
+	public static void gameoverSound() {
+		try {
+			File sound = new File("../sounds/smb_gameover.wav");
+			Sound.playSample(sound);
+		} catch(Exception e) {
+			
 		}
 	}
 	

@@ -18,7 +18,8 @@ public class Bridge implements ParcoursSegment {
 	private boolean VoidAlligned = false;
 	
 	public Bridge(int state) {
-		this.startState = state;
+		VoidAlligned = false;
+		startState = state;
 	}
 	
 	public Bridge() {
