@@ -6,6 +6,7 @@ import lejos.hardware.BrickFinder;
 import lejos.hardware.Button;
 import lejos.hardware.Sound;
 import lejos.hardware.ev3.EV3;
+import lejos.hardware.lcd.LCD;
 import lejos.hardware.lcd.TextLCD;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.hardware.motor.EV3MediumRegulatedMotor;
@@ -224,7 +225,7 @@ public class RobotUtil {
 	 * 
 	 * Make a turn with only one motor moving.
 	 * @param degrees Motor degrees.
-	 * @param rightTurn if true, roboter makes a right turn. Turns left otherwise.
+	 * @param rightTurn if true, robot makes a right turn. Turns left otherwise.
 	 */
 	public static void turn(int degrees, boolean rightTurn) {
 		if(rightTurn) {
@@ -237,23 +238,28 @@ public class RobotUtil {
 	}
 	
 	
-	
-	
 	public static void oneUpSound() {
 		try {
-			File sound = new File("../sounds/smb_1-up.wav");
-			Sound.playSample(sound);
-		} catch(Exception e) {
 			
+			File sound = new File("sounds/smb_1-up");
+			System.out.println("Sound: " + sound.getAbsolutePath());
+			
+			int r = Sound.playSample(sound);
+			LCD.drawString("Code: " + r, 2, 3);
+			
+		} catch(Exception e) {
+			System.out.println(e.getStackTrace());
+			LCD.clear();
+			LCD.drawString(e.getMessage(), 2, 2);
 		}
 	}
 	
 	public static void gameoverSound() {
 		try {
-			File sound = new File("../sounds/smb_gameover.wav");
+			File sound = new File("/sounds/smb_gameover");
 			Sound.playSample(sound);
 		} catch(Exception e) {
-			
+			System.out.println(e.getStackTrace());
 		}
 	}
 	
