@@ -3,6 +3,7 @@ package edu.kit.h2t.mindstorms.group2.segments;
 import edu.kit.h2t.mindstorms.group2.ParcoursMain;
 import edu.kit.h2t.mindstorms.group2.RobotUtil;
 import lejos.hardware.Sound;
+import lejos.hardware.lcd.LCD;
 
 public class Maze implements ParcoursSegment {
 
@@ -10,7 +11,7 @@ public class Maze implements ParcoursSegment {
 	private boolean foundRed = false;
 	private boolean turnDirectionLeft = true;
 	
-	private float whiteEps = 0.4f;
+	private float whiteEps = 0.45f;
 	private float redEps = 0.2f;
 	
 	public void init() {
@@ -21,6 +22,9 @@ public class Maze implements ParcoursSegment {
 	}
 
 	public void doStep() {
+		LCD.drawString("White: " + foundWhite, 3, 4);
+		LCD.drawString("Red: " + foundRed, 3, 5);
+		
 		driveRoutine();
 		searchRoutine();
 		if(foundRed && foundWhite) {
@@ -31,7 +35,8 @@ public class Maze implements ParcoursSegment {
 	}
 	
 	private void searchRoutine() {
-		if(redEps < RobotUtil.getRed() && RobotUtil.getRed() < whiteEps)  {
+		float color = RobotUtil.getRed();
+		if(redEps < color && color < whiteEps)  {
 			//Beep on first sound
 			if(!foundRed) {
 				Sound.beep();
@@ -39,7 +44,7 @@ public class Maze implements ParcoursSegment {
 			foundRed = true;
 		} 
 		
-		if(RobotUtil.getRed() > whiteEps) {
+		if(color > whiteEps) {
 			//Beep on first found
 			if (!foundWhite) {
 				Sound.beep();
