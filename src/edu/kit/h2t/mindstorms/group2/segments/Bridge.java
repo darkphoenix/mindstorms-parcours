@@ -169,6 +169,9 @@ public class Bridge implements ParcoursSegment {
 		default:
 			RobotUtil.setMotorSpeed(360);
 			RobotUtil.syncStop();
+			if (state == 4) {
+				ParcoursMain.moveTo("Maze");
+			}
 			break;
 		}	
 		
