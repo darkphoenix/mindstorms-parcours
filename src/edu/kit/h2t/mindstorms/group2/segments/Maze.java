@@ -23,6 +23,13 @@ public class Maze implements ParcoursSegment {
 	}
 
 	public void doStep() {
+		/*
+		 * TODO: ZICKZACK statt drehen. Vor und zurück mit leichter Kurve vorwärts.
+		 * Rückwärts bis touch
+		 * 
+		 * 
+		 */
+		
 		LCD.drawString("White: " + foundWhite, 2, 2);
 		LCD.drawString("Red: " + foundRed, 2, 3);
 		
