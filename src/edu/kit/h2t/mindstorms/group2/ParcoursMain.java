@@ -30,9 +30,12 @@ public class ParcoursMain {
 		while(true) {
 			TextMenu segmentMenu = new TextMenu(names, 1, "Segment");
 			int segNum = segmentMenu.select();
+			if(segNum == -1) continue;
 			moveTo(names[segNum]);
 			while(!Button.ESCAPE.isDown())
 				seg.doStep();
+			//Stop, in case segment didn't end properly
+			RobotUtil.syncStop();
 		}
 	}
 	
