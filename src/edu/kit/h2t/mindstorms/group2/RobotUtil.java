@@ -235,7 +235,11 @@ public class RobotUtil {
 	}
 	
 	public static void sensorMoverCenter() {
-		sensorMover.rotateTo(0, true);
+		sensorMoverCenter(true);
+	}
+	
+	public static void sensorMoverCenter(boolean returnImmediate) {
+		sensorMover.rotateTo(0, returnImmediate);
 	}
 	
 	public static void sensorMoverRight() {

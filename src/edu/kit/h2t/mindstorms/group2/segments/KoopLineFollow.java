@@ -92,7 +92,10 @@ public class KoopLineFollow implements ParcoursSegment {
 	
 		int sensorDirection = getDirection();
 		
-		RobotUtil.sensorMoverCenter();
+		if (sensorDirection == -1)
+			RobotUtil.sensorMoverCenter(false);
+		else
+			RobotUtil.sensorMoverCenter();
 		
 		//Lücke
 		if (sensorDirection == 0){
@@ -115,7 +118,7 @@ public class KoopLineFollow implements ParcoursSegment {
 					RobotUtil.rightMotor.backward();
 					RobotUtil.leftMotor.setSpeed(baseSpeed/2);
 					RobotUtil.leftMotor.forward();
-					correction = 0.7;
+					correction = 0.8;
 				}
 			}
 			
