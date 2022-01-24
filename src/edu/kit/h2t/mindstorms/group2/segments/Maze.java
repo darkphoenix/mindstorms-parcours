@@ -18,7 +18,8 @@ public class Maze implements ParcoursSegment {
 		while(RobotUtil.getDistance() > 0.15 && RobotUtil.chk()) {
 			RobotUtil.syncForward();
 		}
-		RobotUtil.turn(1150, false);
+//		RobotUtil.turn(1150, false);
+		RobotUtil.spin(600);
 	}
 
 	public void doStep() {
@@ -87,15 +88,18 @@ public class Maze implements ParcoursSegment {
 			
 			if(turnDirectionLeft) {
 				//Turn left
-				RobotUtil.turn(2400, false);
+//				RobotUtil.turn(2400, false);
+				RobotUtil.spin(1200);
 			} else {
 				//Turn right
-				RobotUtil.turn(2400, true);
+//				RobotUtil.turn(2400, true);
+				RobotUtil.spin(-1200);
 			}
 		
 			turnDirectionLeft = !turnDirectionLeft;
 			
 			while(!RobotUtil.getTouch() && RobotUtil.chk()) {
+				searchRoutine();
 				RobotUtil.syncBackward();
 			}
 			
