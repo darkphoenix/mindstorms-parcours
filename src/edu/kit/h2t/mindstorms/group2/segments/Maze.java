@@ -7,18 +7,25 @@ import lejos.hardware.lcd.LCD;
 
 public class Maze implements ParcoursSegment {
 
-	private boolean foundWhite = false;
-	private boolean foundRed = false;
-	private boolean turnDirectionLeft = true;
+	private boolean foundWhite;
+	private boolean foundRed;
+	private boolean turnDirectionLeft;
 	
 	private boolean drivingForward = true;
 	
-	private int speedOffset = 20;
+	private int speedOffset = 50;
 	
 	private float whiteEps = 0.2f;
 	private float redEps = 0.07f;
 	
 	public void init() {
+		foundRed = false;
+		foundWhite = false;
+		
+		turnDirectionLeft = true;
+		
+		drivingForward = true;
+		
 		while(RobotUtil.getDistance() > 0.15 && RobotUtil.chk()) {
 			RobotUtil.syncForward();
 		}
@@ -112,7 +119,7 @@ public class Maze implements ParcoursSegment {
 				RobotUtil.syncForward();
 				return;
 			} else {
-				RobotUtil.setMotorSpeed(RobotUtil.baseSpeed);
+				RobotUtil.setMotorSpeed(RobotUtil.baseSpeed - speedOffset, RobotUtil.baseSpeed);
 				RobotUtil.syncBackward();
 				return;
 			}
