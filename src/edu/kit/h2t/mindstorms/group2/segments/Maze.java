@@ -40,7 +40,7 @@ public class Maze implements ParcoursSegment {
 		while (RobotUtil.getDistance() > 0.15 && RobotUtil.chk()) {
 			RobotUtil.syncForward();
 		}
-//		RobotUtil.turn(1150, false);
+		RobotUtil.turn(1150, false);
 		RobotUtil.spin(600);
 	}
 
