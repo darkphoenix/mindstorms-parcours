@@ -20,12 +20,13 @@ public class Maze implements ParcoursSegment {
 	private int rightTachoCache;
 
 	private int baseSpeed;
+	private int SpeedModifier = 1;
 	
 	private float whiteEps = 0.2f;
 	private float redEps = 0.07f;
 
 	public void init() {
-		baseSpeed = RobotUtil.baseSpeed;
+		baseSpeed = RobotUtil.baseSpeed * SpeedModifier;
 		
 		foundRed = false;
 		foundWhite = false;
@@ -121,7 +122,7 @@ public class Maze implements ParcoursSegment {
 		} else if (!drivingForward) {
 			if (RobotUtil.getTouch()) {
 				drivingForward = true;
-				Delay.msDelay(1000);
+				Delay.msDelay(1000 / SpeedModifier);
 				RobotUtil.syncForward();
 				return;
 			} else {
