@@ -4,6 +4,7 @@ import edu.kit.h2t.mindstorms.group2.ParcoursMain;
 import edu.kit.h2t.mindstorms.group2.RobotUtil;
 import lejos.hardware.Sound;
 import lejos.hardware.lcd.LCD;
+import lejos.utility.Delay;
 
 public class Maze implements ParcoursSegment {
 
@@ -13,7 +14,10 @@ public class Maze implements ParcoursSegment {
 	
 	private boolean drivingForward = true;
 	
-	private int speedOffset = 50;
+	private int speedOffset = 25;
+	
+	private int leftTachoCache;
+	private int rightTachoCache;
 	
 	private float whiteEps = 0.2f;
 	private float redEps = 0.07f;
@@ -26,6 +30,8 @@ public class Maze implements ParcoursSegment {
 		
 		drivingForward = true;
 		
+		RobotUtil.setMotorSpeed(RobotUtil.baseSpeed);
+		
 		while(RobotUtil.getDistance() > 0.15 && RobotUtil.chk()) {
 			RobotUtil.syncForward();
 		}
@@ -33,14 +39,7 @@ public class Maze implements ParcoursSegment {
 		RobotUtil.spin(600);
 	}
 
-	public void doStep() {
-		/*
-		 * TODO: ZICKZACK statt drehen. Vor und zurück mit leichter Kurve vorwärts.
-		 * Rückwärts bis touch
-		 * 
-		 * 
-		 */
-		
+	public void doStep() {		
 		LCD.drawString("White: " + foundWhite, 2, 2);
 		LCD.drawString("Red: " + foundRed, 2, 3);
 		
@@ -108,7 +107,7 @@ public class Maze implements ParcoursSegment {
 				RobotUtil.syncBackward();
 				return;
 			} else {
-				RobotUtil.setMotorSpeed(RobotUtil.baseSpeed, RobotUtil.baseSpeed + speedOffset);
+				RobotUtil.setMotorSpeed(RobotUtil.baseSpeed, RobotUtil.baseSpeed);
 				RobotUtil.syncForward();
 				return;
 			}
@@ -116,10 +115,11 @@ public class Maze implements ParcoursSegment {
 		} else if (!drivingForward) {
 			if(RobotUtil.getTouch()) {
 				drivingForward = true;
+				Delay.msDelay(1000);
 				RobotUtil.syncForward();
 				return;
 			} else {
-				RobotUtil.setMotorSpeed(RobotUtil.baseSpeed - speedOffset, RobotUtil.baseSpeed);
+				RobotUtil.setMotorSpeed(RobotUtil.baseSpeed + speedOffset, RobotUtil.baseSpeed);
 				RobotUtil.syncBackward();
 				return;
 			}
