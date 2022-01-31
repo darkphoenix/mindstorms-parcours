@@ -135,7 +135,6 @@ public class Bridge implements ParcoursSegment {
 		case 3:
 			//RobotUtil.sensorMoverLeft();
 			Delay.msDelay(400);
-			RobotUtil.gameoverSound();
 			if(RobotUtil.getAngle() < -5) {
 				RobotUtil.syncForward();
 			} else {
