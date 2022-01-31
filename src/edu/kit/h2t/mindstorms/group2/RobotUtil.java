@@ -21,6 +21,31 @@ import lejos.robotics.RegulatedMotor;
 import lejos.robotics.SampleProvider;
 
 public class RobotUtil {
+	
+	public static enum Notes {
+		D4(293.66),
+		G4(392.00),
+		AS4(425.30),
+		B4(466.16),
+		H4(493.88),
+		C5(532.25),
+		D5(587.33),
+		ES5(622.25),
+		F5(698.46),
+		G5(783.99),
+		AS5(850.61),
+		B5(932.33),
+		H5(987.77),
+		C6(1046.50),
+		D6(1174.66);
+
+	    public final double freq;
+
+	    private Notes(double freq) {
+	        this.freq = freq;
+	    }
+	}
+	
 	private static boolean isRGB = true;
 	private static Port colourPort;
 	private static EV3ColorSensor colourSensor;
@@ -253,22 +278,23 @@ public class RobotUtil {
 			rightMotor.rotate(degrees);
 		}
 	}
-	
-	
+
+	/*	
+	g4, h4, d5, g5, h5
+	 
+	as4, c5, es5, as5, c6
+
+	b4, d4, f5, b5, d6
+*/
 	public static void oneUpSound() {
-		try {
-			
-			File sound = new File("sounds/smb_1-up");
-			System.out.println("Sound: " + sound.getAbsolutePath());
-			
-			int r = Sound.playSample(sound);
-			LCD.drawString("Code: " + r, 2, 3);
-			
-		} catch(Exception e) {
-			System.out.println(e.getStackTrace());
-			LCD.clear();
-			LCD.drawString(e.getMessage(), 2, 2);
+		Notes[] melody ={Notes.G4, Notes.H4, Notes.D4, Notes.G5, Notes.H5, 
+				Notes.AS4, Notes.C5, Notes.ES5, Notes.AS5, Notes.C6,
+				Notes.B4, Notes.D4, Notes.F5, Notes.B5, Notes.D6};
+		
+		for(Notes note : melody) {
+			Sound.playNote(Sound.PIANO, (int) note.freq, 2);
 		}
+		
 	}
 	
 	public static void gameoverSound() {

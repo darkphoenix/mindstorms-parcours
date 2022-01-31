@@ -40,7 +40,7 @@ public class Maze implements ParcoursSegment {
 		while (RobotUtil.getDistance() > 0.15 && RobotUtil.chk()) {
 			RobotUtil.syncForward();
 		}
-//		RobotUtil.turn(1150, false);
+		RobotUtil.turn(1150, false);
 		RobotUtil.spin(600);
 	}
 
@@ -49,8 +49,7 @@ public class Maze implements ParcoursSegment {
 		LCD.drawString("Red: " + foundRed, 2, 3);
 
 		if (foundRed && foundWhite) {
-			Sound.twoBeeps();
-//			RobotUtil.oneUpSound();
+			RobotUtil.oneUpSound();
 			RobotUtil.syncStop();
 			RobotUtil.abort();
 		} else {
