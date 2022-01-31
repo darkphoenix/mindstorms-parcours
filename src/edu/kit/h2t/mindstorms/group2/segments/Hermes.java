@@ -42,8 +42,8 @@ public class Hermes implements ParcoursSegment {
 			Delay.msDelay(250);
 			
 			//Back off
-			//RobotUtil.leftMotor.rotate(-300, true);
-			//RobotUtil.rightMotor.rotate(-300, false);
+			RobotUtil.leftMotor.rotate(-300, true);
+			RobotUtil.rightMotor.rotate(-300, false);
 			
 			RobotUtil.spin(1200);
 			

@@ -134,13 +134,8 @@ public class Bridge implements ParcoursSegment {
 		case 3:
 			RobotUtil.sensorMoverLeft();
 			
-			if(RobotUtil.getAngle() < 5) {
-				if(!VoidAlligned) {
-					VoidAlligned = allignVoid();
-					Sound.buzz();
-				} else {
-					RobotUtil.syncForward();
-				}
+			if(RobotUtil.getAngle() < -5) {
+				RobotUtil.syncForward();
 			} else {
 				RobotUtil.setMotorSpeed(360);
 				RobotUtil.sensorMoverRight();
@@ -243,8 +238,11 @@ public class Bridge implements ParcoursSegment {
 		//Drive down	
 		case 3:
 			RobotUtil.setMotorSpeed(600);
+			RobotUtil.leftMotor.setSpeed(400);
 			if(RobotUtil.getAngle() < -5) {
 				RobotUtil.syncForward();
+				if (isVoid())
+					Sound.beep();
 			} else {
 				RobotUtil.setMotorSpeed(360);
 				
