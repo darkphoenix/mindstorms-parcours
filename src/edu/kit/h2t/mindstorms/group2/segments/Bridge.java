@@ -4,6 +4,7 @@ import edu.kit.h2t.mindstorms.group2.ParcoursMain;
 import edu.kit.h2t.mindstorms.group2.RobotUtil;
 import lejos.hardware.Sound;
 import lejos.hardware.lcd.LCD;
+import lejos.utility.Delay;
 
 public class Bridge implements ParcoursSegment {
 	private int state = 0;
@@ -132,13 +133,14 @@ public class Bridge implements ParcoursSegment {
 			break;
 		//Drive down	
 		case 3:
-			RobotUtil.sensorMoverLeft();
-			
+			//RobotUtil.sensorMoverLeft();
+			Delay.msDelay(400);
+			RobotUtil.gameoverSound();
 			if(RobotUtil.getAngle() < -5) {
 				RobotUtil.syncForward();
 			} else {
 				RobotUtil.setMotorSpeed(360);
-				RobotUtil.sensorMoverRight();
+				//RobotUtil.sensorMoverRight();
 				state++;
 				Sound.beep();
 			}

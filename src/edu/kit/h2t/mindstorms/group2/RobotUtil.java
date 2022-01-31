@@ -152,7 +152,16 @@ public class RobotUtil {
 	}
 	
 	public static void resetAngle() {
-		gyro.reset();
+		gyro.close();
+		boolean initialisedGyro = false;
+		while (!initialisedGyro)
+			try {
+				gyroPort = brick.getPort("S4");
+				gyro = new EV3GyroSensor(gyroPort);
+				angleMode = gyro.getAngleMode();
+				gyro.reset();
+				initialisedGyro = true;
+			} catch (Exception e) {}
 	}
 	
 	public static int getLeftTacho() {
