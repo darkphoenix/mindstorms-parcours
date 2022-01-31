@@ -28,6 +28,8 @@ public class Hermes implements ParcoursSegment {
 		
 	}
 	public void doStep() {
+		RobotUtil.leftMotor.resetTachoCount();
+		RobotUtil.rightMotor.resetTachoCount();
 		RobotUtil.rightMotor.backward();
 		RobotUtil.leftMotor.forward();
 		float dis = RobotUtil.getDistance();
@@ -41,15 +43,20 @@ public class Hermes implements ParcoursSegment {
 			//Stop after finding box
 			Delay.msDelay(250);
 			
-			//Back off
-			//RobotUtil.leftMotor.rotate(-300, true);
-			//RobotUtil.rightMotor.rotate(-300, false);
+			//RobotUtil.spin(1400);
+
+			int tacho = RobotUtil.rightMotor.getTachoCount();
+			//Return
+			RobotUtil.spin(RobotUtil.leftMotor.getTachoCount());
 			
-			RobotUtil.spin(1200);
+			int driveDist = (1/tacho)*20000 + (int)(dis*1000);
 			
-			RobotUtil.setMotorSpeed(10000);
+			RobotUtil.leftMotor.rotate(driveDist, true);
+			RobotUtil.rightMotor.rotate(driveDist);
+			
+			/*RobotUtil.setMotorSpeed(10000);
 			RobotUtil.rightMotor.backward();
-			RobotUtil.leftMotor.backward();
+			RobotUtil.leftMotor.backward();*/
 			
 //			Delay.msDelay(3000);
 			
@@ -73,6 +80,7 @@ public class Hermes implements ParcoursSegment {
 			//Back off
 			RobotUtil.leftMotor.rotate(600, true);
 			RobotUtil.rightMotor.rotate(600, false);
+			
 			
 			ParcoursMain.moveTo("FindBridge");
 		}
