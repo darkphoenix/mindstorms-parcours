@@ -19,10 +19,14 @@ public class Maze implements ParcoursSegment {
 	private int leftTachoCache;
 	private int rightTachoCache;
 
+	private int baseSpeed;
+	
 	private float whiteEps = 0.2f;
 	private float redEps = 0.07f;
 
 	public void init() {
+		baseSpeed = RobotUtil.baseSpeed;
+		
 		foundRed = false;
 		foundWhite = false;
 
@@ -30,7 +34,7 @@ public class Maze implements ParcoursSegment {
 
 		drivingForward = true;
 
-		RobotUtil.setMotorSpeed(RobotUtil.baseSpeed);
+		RobotUtil.setMotorSpeed(baseSpeed);
 
 		while (RobotUtil.getDistance() > 0.15 && RobotUtil.chk()) {
 			RobotUtil.syncForward();
@@ -109,7 +113,7 @@ public class Maze implements ParcoursSegment {
 				RobotUtil.syncBackward();
 				return;
 			} else {
-				RobotUtil.setMotorSpeed(RobotUtil.baseSpeed, RobotUtil.baseSpeed);
+				RobotUtil.setMotorSpeed(baseSpeed, baseSpeed);
 				RobotUtil.syncForward();
 				return;
 			}
@@ -121,7 +125,7 @@ public class Maze implements ParcoursSegment {
 				RobotUtil.syncForward();
 				return;
 			} else {
-				RobotUtil.setMotorSpeed(RobotUtil.baseSpeed + speedOffset, RobotUtil.baseSpeed);
+				RobotUtil.setMotorSpeed(baseSpeed + speedOffset, baseSpeed);
 				RobotUtil.syncBackward();
 				return;
 			}
