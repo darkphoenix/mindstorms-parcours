@@ -11,6 +11,10 @@ public class Maze implements ParcoursSegment {
 	private boolean foundRed = false;
 	private boolean turnDirectionLeft = true;
 	
+	private boolean drivingForward = true;
+	
+	private int speedOffset = 20;
+	
 	private float whiteEps = 0.2f;
 	private float redEps = 0.07f;
 	
@@ -33,7 +37,8 @@ public class Maze implements ParcoursSegment {
 		LCD.drawString("White: " + foundWhite, 2, 2);
 		LCD.drawString("Red: " + foundRed, 2, 3);
 		
-		driveRoutine();
+		//driveRoutineTurns();
+		driveRoutineZigZag();
 		searchRoutine();
 		if(foundRed && foundWhite) {
 			Sound.twoBeeps();
@@ -42,6 +47,7 @@ public class Maze implements ParcoursSegment {
 		}
 	}
 	
+
 	private void searchRoutine() {
 		float[] color = RobotUtil.getRGB();
 		
@@ -87,7 +93,34 @@ public class Maze implements ParcoursSegment {
 		return red > redEps && green < redEps;
 	}
 	
-	private void driveRoutine() {
+	private void driveRoutineZigZag() {
+		
+		if (drivingForward){
+			if(RobotUtil.getDistance() < 0.15) {
+				drivingForward = false;
+				RobotUtil.syncBackward();
+				return;
+			} else {
+				RobotUtil.setMotorSpeed(RobotUtil.baseSpeed, RobotUtil.baseSpeed + speedOffset);
+				RobotUtil.syncForward();
+				return;
+			}
+			
+		} else if (!drivingForward) {
+			if(RobotUtil.getTouch()) {
+				drivingForward = true;
+				RobotUtil.syncForward();
+				return;
+			} else {
+				RobotUtil.setMotorSpeed(RobotUtil.baseSpeed);
+				RobotUtil.syncBackward();
+				return;
+			}
+		}
+		
+	}
+	
+	private void driveRoutineTurns() {
 		if(RobotUtil.getDistance() < 0.15) {
 			//Backoff
 			RobotUtil.rightMotor.rotate(-100, true);
