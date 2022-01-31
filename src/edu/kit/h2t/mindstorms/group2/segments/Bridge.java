@@ -88,7 +88,7 @@ public class Bridge implements ParcoursSegment {
 			RobotUtil.sensorMoverLeft();
 			regulatedDriveTask();
 			if(RobotUtil.getAngle() < 5) {
-				RobotUtil.setMotorSpeed(360);
+				RobotUtil.setMotorSpeed(RobotUtil.baseSpeed);
 				RobotUtil.sensorMoverCenter();
 				while(!isVoid() && RobotUtil.chk()) {
 					RobotUtil.syncForward();
@@ -139,14 +139,14 @@ public class Bridge implements ParcoursSegment {
 			if(RobotUtil.getAngle() < -5) {
 				RobotUtil.syncForward();
 			} else {
-				RobotUtil.setMotorSpeed(360);
+				RobotUtil.setMotorSpeed(300, 360);
 				//RobotUtil.sensorMoverRight();
 				state++;
 				Sound.beep();
 			}
 			break;
 		default:
-			RobotUtil.setMotorSpeed(360);
+			RobotUtil.setMotorSpeed(RobotUtil.baseSpeed);
 			RobotUtil.syncStop();
 			if (state == 4) {
 				ParcoursMain.moveTo("Maze");

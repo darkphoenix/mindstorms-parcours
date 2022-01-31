@@ -42,6 +42,7 @@ public class ParcoursMain {
 			RobotUtil.syncStop();
 			RobotUtil.lcd.clear();
 			RobotUtil.abort(false);
+			RobotUtil.setMotorSpeed(RobotUtil.baseSpeed);
 		}
 	}
 	
