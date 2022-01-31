@@ -33,6 +33,7 @@ Einzelne Termine
 18.10.2021:
 --
 Bauen von Grundgerüst. Idee schwenkender Farbsensor und statt Reifen Ketten.
+
 25.10.2021:
 --
 Fertigstellung von erstem Prototyp. Linienfolgen mit schwenkendem Sensor (Probleme, dass alle Ereignisse – Sensor schwenken und weiterfahren nacheinander passieren, also langsam). Dadurch, dass wir immer mit dem Sensor hin- und herschwenken, sind wir besonders auf geraden Streckenabschnitten sehr langsam. Details: wir messen einen Wert links und einen rechts
