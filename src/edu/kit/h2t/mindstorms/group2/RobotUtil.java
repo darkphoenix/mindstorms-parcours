@@ -49,6 +49,8 @@ public class RobotUtil {
 	
 	public static final int baseSpeed = 360;
 	
+	private static boolean abort = false;
+	
 	public static void init() {
 		//init brick
 		brick = (EV3) BrickFinder.getLocal();
@@ -298,6 +300,14 @@ public class RobotUtil {
 	}
 	
 	public static boolean chk() {
-		return !Button.ESCAPE.isDown();
+		return !Button.ESCAPE.isDown() && !abort;
+	}
+	
+	public static void abort(boolean p) {
+		abort = p;
+	}
+	
+	public static void abort() {
+		abort(true);
 	}
 }

@@ -34,13 +34,14 @@ public class ParcoursMain {
 			if(segNum == -1) continue;
 			if(names[segNum] == "Exit") break;
 			moveTo(names[segNum]);
-			while(!Button.ESCAPE.isDown())
+			while(RobotUtil.chk())
 				seg.doStep();
 			//Stop, in case segment didn't end properly
 			RobotUtil.sensorMover.stop();
 			RobotUtil.sensorMoverCenter();
 			RobotUtil.syncStop();
 			RobotUtil.lcd.clear();
+			RobotUtil.abort(false);
 		}
 	}
 	
