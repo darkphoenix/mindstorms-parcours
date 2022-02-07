@@ -42,8 +42,8 @@ public class Hermes implements ParcoursSegment {
 			Delay.msDelay(250);
 			
 			//Back off
-			RobotUtil.leftMotor.rotate(-300, true);
-			RobotUtil.rightMotor.rotate(-300, false);
+			RobotUtil.leftMotor.rotate(-150, true);
+			RobotUtil.rightMotor.rotate(-150, false);
 			
 			RobotUtil.spin(1200);
 			
@@ -60,7 +60,7 @@ public class Hermes implements ParcoursSegment {
 				if(RobotUtil.getTouch()) {
 					if(abort >= 0)
 						abort++;
-					if(abort > 600) {
+					if(abort > 200) {
 						break;
 					}
 				} else {

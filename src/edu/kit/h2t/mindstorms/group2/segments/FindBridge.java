@@ -122,7 +122,8 @@ public class FindBridge implements ParcoursSegment {
 		Sound.beep();
 		
 //		ParcoursMain.leftMotor.rotate(100, true);
-//		ParcoursMain.rightMotor.rotate(-100, false);
+//		ParcoursMain.rightMoto.rotate(-100, false);
+		RobotUtil.spin(50);
 		
 		RobotUtil.rightMotor.stop(true);
 		RobotUtil.leftMotor.stop();
