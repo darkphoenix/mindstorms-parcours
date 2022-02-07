@@ -33,7 +33,7 @@ public class Bridge implements ParcoursSegment {
 		RobotUtil.resetAngle();
 		
 //		sensorMover.rotateTo(sensorStopL);
-		Sound.buzz();
+//		Sound.buzz();
 		
 	}
 
@@ -98,11 +98,10 @@ public class Bridge implements ParcoursSegment {
 				RobotUtil.rightMotor.rotate(-100, true);
 				RobotUtil.leftMotor.rotate(-100, false);
 				
-				//Turn left
 				RobotUtil.spin(-590);
 				
 				state++;
-				Sound.beep();
+//				Sound.beep();
 			}
 			
 			if(isVoid()) {
@@ -121,7 +120,7 @@ public class Bridge implements ParcoursSegment {
 				//Turn left
 				RobotUtil.spin(-590);
 				state++;
-				Sound.beep();
+//				Sound.beep();
 				
 				while(RobotUtil.getAngle() >= -5 && RobotUtil.chk()) {
 					RobotUtil.syncForward();
@@ -141,7 +140,7 @@ public class Bridge implements ParcoursSegment {
 				RobotUtil.setMotorSpeed(300, 360);
 				//RobotUtil.sensorMoverRight();
 				state++;
-				Sound.beep();
+//				Sound.beep();
 			}
 			break;
 		default:
@@ -176,7 +175,7 @@ public class Bridge implements ParcoursSegment {
 		}
 		RobotUtil.rightMotor.stop();
 		
-		RobotUtil.gameoverSound();
+//		RobotUtil.gameoverSound();
 		
 		//Backoff
 		RobotUtil.rightMotor.rotate(-50, true);
